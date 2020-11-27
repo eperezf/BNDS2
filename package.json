@@ -1,0 +1,19 @@
+{
+  "name": "bnds2",
+  "version": "0.1.0",
+  "description": "BNDS",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eperezf/BNDS2.git"
+  },
+  "author": "Eduardo Pérez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eperezf/BNDS2/issues"
+  },
+  "homepage": "https://github.com/eperezf/BNDS2#readme"
+}
