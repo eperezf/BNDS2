@@ -9,7 +9,7 @@ router.get('/', async (req, res, next) => {
   res.render('index', { title: 'BNDS' });
 });
 
-router.get('/operator/:name', async (req,res) => {
+router.get('/operator/:name/:id', async (req,res) => {
 
   /*
 
@@ -155,6 +155,7 @@ router.get('/operator/:name', async (req,res) => {
     }
     return frequencylist;
   }
+
   for (frequency_generation of genList) {
     for (frequency of frequency_generation.frequencies) {
       providers = searchFrequencyCompat(frequency.id, operator_frequencies)
@@ -179,10 +180,46 @@ router.get('/operator/:name', async (req,res) => {
   }
 
 
+  //Obtenemos el smartphone
+  smartphone = await models.smartphone.findOne({
+    where: {
+      id: req.params.id
+    },
+    raw:true
+  });
+
+  //Obtenemos las tecnologías asociadas al smartphone
+
+  smartphone_technologies = await models.smartphone_technology.findAll({where: {smartphoneId: smartphone.id}, raw:true});
+
+  //Obtenemos compatibilidades de smartphone y tecnología
+
+  for (smartphone_technology of smartphone_technologies) {
+    technologies.forEach((item, i) => {
+      if (smartphone_technology.technologyId == item.id) {
+        technologies[i].smartphoneCompat = smartphone_technology.compatible
+      }
+    });
+  }
+
+  //Obtenemos la tabla intermedia operadora-frecuencia
+
+  smartphone_frequencies = await models.smartphone_frequency.findAll({where: {smartphoneId: smartphone.id}, attributes: ['frequencyId', 'compatible'], raw:true});
+
+  for (frequency_generation of genList){
+    for(frequency of frequency_generation.frequencies){
+
+      smartphone_frequencies.forEach((item, i) => {
+        if (item.frequencyId == frequency.id) {
+          frequency.smartphoneCompat = item.compatible;
+          console.log(frequency);
+        }
+      });
+    }
+  }
 
 
-
-  res.status(200).json({frequency_generations: genList, technologies: technologies, operator: operator});
+  res.status(200).json({operator: operator, smartphone: smartphone, frequency_generations: genList, technologies: technologies});
 })
 
 

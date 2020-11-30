@@ -13,7 +13,9 @@ const modelDefiners = [
   require('./models/frequency'),
   require('./models/technology'),
   require('./models/operator_frequency'),
-  require('./models/operator_technology')
+  require('./models/operator_technology'),
+  require('./models/smartphone_technology'),
+  require('./models/smartphone_frequency'),
 ];
 
 // We define all models according to their files.
