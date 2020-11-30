@@ -4,7 +4,17 @@ const { applyExtraSetup } = require('./extra-setup');
 // In a real app, you should keep the database connection URL as an environment variable.
 // But for this example, we will just use a local SQLite database.
 // const sequelize = new Sequelize(process.env.DB_CONNECTION_URL);
-const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {host: process.env.DB_ENDPOINT, dialect:'mysql', define: {freezeTableName: true}});
+const sequelize = new Sequelize(
+	process.env.DB_NAME,
+	process.env.DB_USER,
+	process.env.DB_PASS,
+	{
+		logging: false,
+		host: process.env.DB_ENDPOINT,
+		dialect:'mysql',
+		define: {freezeTableName: true}
+	}
+);
 
 const modelDefiners = [
 	require('./models/operator'),

@@ -3,6 +3,7 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 var logger = require('morgan');
 
 const sequelize = require('./sequelize');
@@ -19,9 +20,12 @@ app.set('view engine', 'pug');
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true, limit:'50mb', parameterLimit: 1000000 }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+//Use JSON parser
+app.use(bodyParser.json({limit:'50mb'}));
 
 app.use('/', indexRouter);
 
