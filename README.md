@@ -28,10 +28,19 @@ Como BNDS es un **desarrollo privado para Pisapapeles Networks**, la plataforma 
 - `app.js`: Inicialización de Express y dependencias, declaración de rutas.
 - `.gitignore`: Archivos y extensiones ignorados por git
 - `.env.example`: Ejemplo de .env
+
 - `views/error.pug`: Vista de error
 - `views/index.pug`: Vista de inicio
 - `views/includes/layout.pug`: Layout de todas las páginas
 - `views/includes/head.pug`: Elementos en `<head>` de cada página
 - `views/includes/footer.pug`: Elementos en `<footer>` de cada página
+
+- `sequelize/index.js`: Declaración de modelos e inicialización de ORM
+- `sequelize/extra-setup.js`: Declaración de relaciones
+- `sequelize/models`: Carpeta con definiciones de modelos
+
 - `routes/index.js`: Definición de rutas y lógica
+
 - `public`: Esta carpeta contiene todas las imágenes y JS de frontend
+
+- `bin/www`: Declaración de dependencias iniciales y inicialización de servidor
