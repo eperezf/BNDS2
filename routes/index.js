@@ -10,15 +10,28 @@ router.get('/', async (req, res, next) => {
 router.get('/acerca-de', async (req, res, next) => {
   res.render('acerca-de', { title: 'BNDS' });
 });
+router.post('/resultado', async (req, res) => {
 
-router.get('/operator/:name/:id', async (req,res) => {
-  
+  //Obtenemos la operadora
+  operator = await models.operator.findOne({
+    where: {
+      name: req.body.operator
+    },
+    attributes: ['id', 'name', 'urlWeb', 'urlLogo'],
+  });
+
+  //Obtenemos el smartphone
+  smartphone = await models.smartphone.findOne({
+    where: {
+      fullName: req.body.name
+    },
+    raw:true
+  });
+
   //Obtenemos todas las generaciones de frecuencias y sus respectivas frecuencias
-
   generations = await models.generation.findAll();
   genList = []
   var genIter = 0;
-
   for (generation of generations) {
     var freqIter = 0;
     genList[genIter] = {};
@@ -35,7 +48,6 @@ router.get('/operator/:name/:id', async (req,res) => {
   }
 
   //Obtenemos todas las tecnologías
-
   technologies = await models.technology.findAll({attributes:['id', 'name'], raw:true});
   techList = [];
   var techiter = 0;
@@ -43,21 +55,8 @@ router.get('/operator/:name/:id', async (req,res) => {
     techList[techiter]
   }
 
-  //Ahora obtenemos la operadora
-
-  operator = await models.operator.findOne({
-    where: {
-      name: req.params.name
-    },
-    attributes: ['id', 'name', 'urlWeb', 'urlLogo'],
-  });
-
-  //obtenemos la tabla intermedia operadora-tecnología
-
-  operator_technologies = await models.operator_technology.findAll({where: {operatorId: operator.id}, raw:true});
-
   //Obtenemos compatibilidades de operadora y tecnología
-
+  operator_technologies = await models.operator_technology.findAll({where: {operatorId: operator.id}, raw:true});
   for (operator_technology of operator_technologies) {
     technologies.forEach((item, i) => {
       if (operator_technology.technologyId == item.id) {
@@ -66,10 +65,8 @@ router.get('/operator/:name/:id', async (req,res) => {
     });
   }
 
-  //Obtenemos la tabla intermedia operadora-frecuencia
-
+  //Obtenemos compatibilidad de operadora y frecuencias
   operator_frequencies = await models.operator_frequency.findAll({where: {operatorId: operator.id}, raw:true});
-
   function searchFrequencyCompat(frequencyId, op_freq){
     var frequencylist = [];
     for (var operator_frequency of op_freq) {
@@ -79,7 +76,6 @@ router.get('/operator/:name/:id', async (req,res) => {
     }
     return frequencylist;
   }
-
   for (frequency_generation of genList) {
     for (frequency of frequency_generation.frequencies) {
       providers = searchFrequencyCompat(frequency.id, operator_frequencies)
@@ -103,21 +99,8 @@ router.get('/operator/:name/:id', async (req,res) => {
     }
   }
 
-
-  //Obtenemos el smartphone
-  smartphone = await models.smartphone.findOne({
-    where: {
-      id: req.params.id
-    },
-    raw:true
-  });
-
-  //Obtenemos las tecnologías asociadas al smartphone
-
-  smartphone_technologies = await models.smartphone_technology.findAll({where: {smartphoneId: smartphone.id}, raw:true});
-
   //Obtenemos compatibilidades de smartphone y tecnología
-
+  smartphone_technologies = await models.smartphone_technology.findAll({where: {smartphoneId: smartphone.id}, raw:true});
   for (smartphone_technology of smartphone_technologies) {
     technologies.forEach((item, i) => {
       if (smartphone_technology.technologyId == item.id) {
@@ -126,25 +109,25 @@ router.get('/operator/:name/:id', async (req,res) => {
     });
   }
 
-  //Obtenemos la tabla intermedia operadora-frecuencia
-
+  //Obtenemos comaptibilidad de smartphone y frecuencia
   smartphone_frequencies = await models.smartphone_frequency.findAll({where: {smartphoneId: smartphone.id}, attributes: ['frequencyId', 'compatible'], raw:true});
-
   for (frequency_generation of genList){
     for(frequency of frequency_generation.frequencies){
-
       smartphone_frequencies.forEach((item, i) => {
         if (item.frequencyId == frequency.id) {
           frequency.smartphoneCompat = item.compatible;
-          console.log(frequency);
         }
       });
     }
   }
 
-
-  res.status(200).json({operator: operator, smartphone: smartphone, frequency_generations: genList, technologies: technologies});
+  // TEMP: Mostramos los resultados en JSON. Deberían ir como parámetros al render
+  res.status(200).json({
+    operator: operator,
+    smartphone: smartphone,
+    frequencies: genList,
+    technologies: technologies
+  });
 })
-
 
 module.exports = router;
