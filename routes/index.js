@@ -128,20 +128,4 @@ router.post('/resultado', async (req, res) => {
   });
 })
 
-router.get('/operator/:name/:id', async (req,res) => {
-
-
-
-
-
-
-
-
-
-
-
-  res.status(200).json({operator: operator, smartphone: smartphone, frequency_generations: genList, technologies: technologies});
-})
-
-
 module.exports = router;
