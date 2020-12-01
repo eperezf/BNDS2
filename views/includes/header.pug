@@ -1,15 +1,15 @@
-nav.navbar.navbar-expand-lg.navbar-light.bg-light
-  a.navbar-brand(href='#') BNDS
+nav.navbar.navbar-expand-lg.navbar-secondary.bg-secondary
+  a.navbar-brand(href='#').text-white BNDS
   button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarNav', aria-controls='navbarNav', aria-expanded='false', aria-label='Toggle navigation')
     span.navbar-toggler-icon
   #navbarNav.collapse.navbar-collapse
+
     ul.navbar-nav
       li.nav-item.active
-        a.nav-link(href='/')
+        a.nav-link(href='/').text-white
           | Inicio 
           span.sr-only (current)
       li.nav-item.active
-        a.nav-link(href='/acerca-de')
+        a.nav-link(href='/acerca-de').text-white
           | Acerca de nosotros 
           span.sr-only (current)
-      
