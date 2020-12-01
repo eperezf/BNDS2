@@ -4,9 +4,11 @@ const { models } = require('../sequelize');
 
 /* GET home page. */
 router.get('/', async (req, res, next) => {
-
-
   res.render('index', { title: 'BNDS' });
+});
+
+router.get('/acerca-de', async (req, res, next) => {
+  res.render('acerca-de', { title: 'BNDS' });
 });
 
 router.get('/operator/:name/:id', async (req,res) => {
