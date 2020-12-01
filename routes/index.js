@@ -4,7 +4,9 @@ const { models } = require('../sequelize');
 
 /* GET home page. */
 router.get('/', async (req, res, next) => {
-  res.render('index', { title: 'BNDS' });
+  operators=await models.operator.findAll({raw: true, attributes: ['name','id']})
+  console.log(operators)
+  res.render('index', { title: 'BNDS', operators: operators });
 });
 
 router.get('/acerca-de', async (req, res, next) => {
