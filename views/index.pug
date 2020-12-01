@@ -3,3 +3,15 @@ extends includes/layout
 block content
   h1= title
   p Welcome to #{title}
+  form
+  .row
+    .col
+      label Busca tu telefono (marca, modelo y variantes)
+      input.form-control(type='text', placeholder='telefono')
+    .col
+      label Selecciona tu operadora
+      select.form-control
+        each operator in operators
+          option(value=operator.id) #{operator.name}
+  .row 
+    button.btn.btn-primary.col-sm-1.offset-sm-5(type='submit') Verificar
