@@ -5,13 +5,14 @@ block content
   p.offset-md-1 Welcome to #{title}
   form
   .row
-    .col-md-4.offset-md-1
-      label Busca tu telefono (marca, modelo y variantes)
+    .col-md-3.offset-md-1
+      label Busca tu telefono
       input.form-control(type='text', placeholder='telefono')
-    .col-md-4.offset-md-1
+      small#emailHelp.form-text.text-muted (Marca, modelo y variantes)
+    .col-md-3.offset-md-1
       label Selecciona tu operadora
       select.form-control
         each operator in operators
           option(value=operator.id) #{operator.name}
   .row 
-    button.btn.btn-primary.col-md-1.offset-md-5(type='submit') Verificar
+    button.btn.btn-primary.col-md-1.offset-md-4(type='submit') Verificar
