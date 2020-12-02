@@ -1,0 +1,26 @@
+extends includes/layout
+
+block content
+  h1 ¿Es compatible el #{smartphone.fullName} en la operadora #{operator.name}?
+  img.img-responsive(src=operator.urlLogo alt='logo' style='height:150px;width:auto;background:black')
+  h2 Frecuencias
+  each generation in generations
+    p #{generation.name}
+    each frequency in generation.frequencies
+      p #{frequency.name}
+      if (frequency.operatorCompat == 1 && frequency.smartphoneCompat == 1)
+        p Ambos son compatibles
+      else if (frequency.operatorCompat == 0 && frequency.smartphoneCompat == 1)
+        p El #{smartphone.fullName} es compatible pero la operadora #{operator.name} no.
+  
+  h2 Tecnologías
+  each technology in technologies
+    p #{technology.name}
+    if (technology.operatorCompat == 1 && technology.smartphoneCompat == 1)
+      p Ambos son compatibles
+    else if (technology.operatorCompat == 0 && technology.smartphoneCompat == 1)
+      p El #{smartphone.fullName} es compatible pero la operadora #{operator.name} no.
+    else if (technology.operatorCompat == 1 && technology.smartphoneCompat == 0)
+      p El #{smartphone.fullName} no es compatible pero la operadora #{operator.name} sí.
+    else
+      p Ni el #{smartphone.fullName} ni la operadora #{operator.name} son compatibles.
