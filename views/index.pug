@@ -3,15 +3,15 @@ extends includes/layout
 block content
   h1.offset-md-1= title
   p.offset-md-1 Welcome to #{title}
-  form
+  form(action='/resultado' method='POST' enctype='multipart/form-data')
   .row
     .col-md-3.offset-md-1
       label Busca tu telefono
-      input.form-control(type='text', placeholder='telefono')
+      input.form-control(type='text', placeholder='telefono' name='smartphone')
       small#emailHelp.form-text.text-muted (Marca, modelo y variantes)
     .col-md-3.offset-md-1
       label Selecciona tu operadora
-      select.form-control
+      select.form-control(name='operator')
         each operator in operators
           option(value=operator.id) #{operator.name}
   .row 
