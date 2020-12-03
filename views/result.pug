@@ -2,7 +2,14 @@ extends includes/layout
 
 block content
   h1 ¿Es compatible el #{smartphone.fullName} en la operadora #{operator.name}?
-  img.img-fluid(src=operator.urlLogo alt='logo' style='width:150px;background:black')
+  img.img-fluid(src=operator.urlLogo alt='logo' style='width:150px;background:white')
+  .dropdown
+  button#dropdownMenuButton.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+    | Dropdown button
+  .dropdown-menu(aria-labelledby='dropdownMenuButton')
+    a.dropdown-item(href='#') Action
+    a.dropdown-item(href='#') Another action
+    a.dropdown-item(href='#') Something else here
   h2 Frecuencias
   each generation in generations
     p #{generation.name}
@@ -24,3 +31,4 @@ block content
       p El #{smartphone.fullName} no es compatible pero la operadora #{operator.name} sí.
     else
       p Ni el #{smartphone.fullName} ni la operadora #{operator.name} son compatibles.
+  
