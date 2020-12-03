@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const { models } = require('../sequelize');
+const { Op } = require("sequelize");
 
 /* GET home page. */
 router.get('/', async (req, res, next) => {
@@ -26,7 +27,7 @@ router.post('/resultado', async (req, res) => {
   //Obtenemos el smartphone
   smartphone = await models.smartphone.findOne({
     where: {
-      fullName: req.body.smartphone
+      fullName: {[Op.substring]: req.body.smartphone}
     },
     raw:true
   });
