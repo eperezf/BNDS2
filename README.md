@@ -32,7 +32,11 @@ Como BNDS es un **desarrollo privado para Pisapapeles Networks**, la plataforma 
 
 - `views/error.pug`: Vista de error
 - `views/index.pug`: Vista de inicio
+- `views/result.pug`: Vista de los resultados de busqueda
+- `views/acerca-de.pug`: Vista del acerca de la pagina
+- 
 - `views/includes/layout.pug`: Layout de todas las páginas
+- `views/includes/head.pug`: Elementos en `<head>` de cada página
 - `views/includes/head.pug`: Elementos en `<head>` de cada página
 - `views/includes/footer.pug`: Elementos en `<footer>` de cada página
 
@@ -43,5 +47,7 @@ Como BNDS es un **desarrollo privado para Pisapapeles Networks**, la plataforma 
 - `routes/index.js`: Definición de rutas y lógica
 
 - `public`: Esta carpeta contiene todas las imágenes y JS de frontend
+- `public/stylesheet`: Contiene el css para mejoras visuales de frontend
+
 
 - `bin/www`: Declaración de dependencias iniciales y inicialización de servidor
