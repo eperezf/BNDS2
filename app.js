@@ -11,6 +11,7 @@ const sequelize = require('./sequelize');
 
 // Definimos los archivos de las rutas
 var indexRouter = require('./routes/index');
+var apiRouter = require('./routes/api');
 
 var app = express();
 
@@ -28,6 +29,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json({limit:'50mb'}));
 
 app.use('/', indexRouter);
+app.use('/api', apiRouter);
+
 
 
 // catch 404 and forward to error handler

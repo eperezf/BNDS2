@@ -7,8 +7,10 @@ block content
     .row
       .col-md-3.offset-md-1
         label Busca tu telefono
-        input.form-control(type='text', placeholder='telefono' name='smartphone')
+        input.form-control#smartphone(type='search', autocomplete='off', placeholder='Samsung Galaxy S20' name='smartphone')
+        .autocomplete(style='position:absolute;display:inline-block;')
         small#emailHelp.form-text.text-muted (Marca, modelo y variantes)
+        
       .col-md-3.offset-md-1
         label Selecciona tu operadora
         select.form-control(name='operator')
@@ -16,3 +18,5 @@ block content
             option(value=operator.id) #{operator.name}
     .row 
     button.btn.btn-primary.col-md-1.offset-md-4(type='submit') Verificar
+  script(src='https://unpkg.com/axios/dist/axios.min.js')
+  script(src='/javascripts/autocomplete.js')
