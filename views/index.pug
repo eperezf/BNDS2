@@ -3,16 +3,20 @@ extends includes/layout
 block content
   h1.offset-md-1= title
   p.offset-md-1 Welcome to #{title}
-  form
-  .row
-    .col-md-3.offset-md-1
-      label Busca tu telefono
-      input.form-control(type='text', placeholder='telefono')
-      small#emailHelp.form-text.text-muted (Marca, modelo y variantes)
-    .col-md-3.offset-md-1
-      label Selecciona tu operadora
-      select.form-control
-        each operator in operators
-          option(value=operator.id) #{operator.name}
-  .row 
-    button.btn.btn-secondary.col-md-1.offset-md-4(type='submit') Verificar 
+  form(action='/resultado' method='POST' enctype='application/x-www-form-urlencoded')
+    .row
+      .col-md-3.offset-md-1
+        label Busca tu telefono
+        input.form-control#smartphone(type='search', autocomplete='off', placeholder='Samsung Galaxy S20' name='smartphone')
+        .autocomplete(style='position:absolute;display:inline-block;')
+        small#emailHelp.form-text.text-muted (Marca, modelo y variantes)
+        
+      .col-md-3.offset-md-1
+        label Selecciona tu operadora
+        select.form-control(name='operator')
+          each operator in operators
+            option(value=operator.id) #{operator.name}
+    .row 
+    button.btn.btn-primary.col-md-1.offset-md-4(type='submit') Verificar
+  script(src='https://unpkg.com/axios/dist/axios.min.js')
+  script(src='/javascripts/autocomplete.js')

@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const { models } = require('../sequelize');
+const { Op } = require("sequelize");
 
 /* GET home page. */
 router.get('/', async (req, res, next) => {
@@ -12,12 +13,13 @@ router.get('/', async (req, res, next) => {
 router.get('/acerca-de', async (req, res, next) => {
   res.render('acerca-de', { title: 'BNDS' });
 });
-router.post('/resultado', async (req, res) => {
 
+router.post('/resultado', async (req, res) => {
+  console.log(req.body);
   //Obtenemos la operadora
   operator = await models.operator.findOne({
     where: {
-      name: req.body.operator
+      id: req.body.operator
     },
     attributes: ['id', 'name', 'urlWeb', 'urlLogo'],
   });
@@ -25,7 +27,7 @@ router.post('/resultado', async (req, res) => {
   //Obtenemos el smartphone
   smartphone = await models.smartphone.findOne({
     where: {
-      fullName: req.body.name
+      fullName: {[Op.substring]: req.body.smartphone}
     },
     raw:true
   });
@@ -122,14 +124,22 @@ router.post('/resultado', async (req, res) => {
       });
     }
   }
-
-  // TEMP: Mostramos los resultados en JSON. Deberían ir como parámetros al render
-  res.status(200).json({
+  console.log(generations);
+/*
+  res.json({title: 'BNDS',
+  operator: operator,
+  smartphone: smartphone,
+  generations: genList,
+  technologies: technologies})
+  */
+  res.render('result', {
+    title: 'BNDS',
     operator: operator,
     smartphone: smartphone,
-    frequencies: genList,
+    generations: genList,
     technologies: technologies
   });
+
 })
 
 module.exports = router;

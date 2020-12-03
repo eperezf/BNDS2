@@ -1,15 +1,11 @@
-nav.navbar.navbar-expand-lg.navbar-light.bg-light
-  a.navbar-brand(href='#') BNDS
-  button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarNav', aria-controls='navbarNav', aria-expanded='false', aria-label='Toggle navigation')
+nav.mb-1.navbar.navbar-expand-lg.navbar-dark(style = 'background-color:#16bac5')
+  a.navbar-brand(href='/')
+    img(src='/images/logo.png', height='50px', width='auto')
+  button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent-333', aria-controls='navbarSupportedContent-333', aria-expanded='false', aria-label='Toggle navigation')
     span.navbar-toggler-icon
-  #navbarNav.collapse.navbar-collapse
-    ul.navbar-nav
-      li.nav-item.active
-        a.nav-link(href='/')
-          | Inicio 
-          span.sr-only (current)
-      li.nav-item.active
-        a.nav-link(href='/acerca-de')
-          | Acerca de nosotros 
-          span.sr-only (current)
-      
+  #navbarSupportedContent-333.collapse.navbar-collapse
+    ul.navbar-nav.mr-auto
+      li.nav-item
+        a.nav-link(href='/') Inicio
+      li.nav-item
+        a.nav-link(href='/acerca-de') Acerca de
