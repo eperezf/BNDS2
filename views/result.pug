@@ -2,7 +2,7 @@ extends includes/layout
 
 block content
   h1 ¿Es compatible el #{smartphone.fullName} en la operadora #{operator.name}?
-  img.img-responsive(src=operator.urlLogo alt='logo' style='height:150px;width:auto;background:black')
+  img.img-fluid(src=operator.urlLogo alt='logo' style='width:150px;background:black')
   h2 Frecuencias
   each generation in generations
     p #{generation.name}
