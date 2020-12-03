@@ -3,13 +3,7 @@ extends includes/layout
 block content
   h1 ¿Es compatible el #{smartphone.fullName} en la operadora #{operator.name}?
   img.img-fluid(src=operator.urlLogo alt='logo' style='width:150px;background:white')
-  .dropdown
-  button#dropdownMenuButton.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-    | Dropdown button
-  .dropdown-menu(aria-labelledby='dropdownMenuButton')
-    a.dropdown-item(href='#') Action
-    a.dropdown-item(href='#') Another action
-    a.dropdown-item(href='#') Something else here
+  
   h2 Frecuencias
   each generation in generations
     p #{generation.name}
@@ -32,3 +26,25 @@ block content
     else
       p Ni el #{smartphone.fullName} ni la operadora #{operator.name} son compatibles.
   
+  .container
+  .row
+    .col-lg-2.col-md-2.col-sm-4.cl-xs-12
+      h4
+        a(href='#col1Content', data-toggle='collapse') Column1
+      #col1Content.collapse.in
+        | texto
+  .row
+    .col-lg-2.col-md-2.col-sm-4.cl-xs-12
+      h4
+        a(href='#col2Content', data-toggle='collapse') Column1
+      #col2Content.collapse.in
+        | texto
+  .row
+    .col-lg-2.col-md-2.col-sm-4.cl-xs-12
+      h4
+        a(href='#col3Content', data-toggle='collapse') Column1
+      #col3Content.collapse.in
+        | texto
+    
+  script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js')
+  script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js')
