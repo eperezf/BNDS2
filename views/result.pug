@@ -14,7 +14,7 @@ block content
               h5.text-center #{smartphone.fullName}
             p
               if smartphone.reviewUrl
-                a.btn.btn-primary(href=smartphone.reviewUrl) Leer review
+                a.btn.btn-primary(href='https://pisapapeles.net/'+smartphone.reviewUrl) Leer review
       .col-md-3.mt-3
         #accordionGen.accordion
           each generation in generations

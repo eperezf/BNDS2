@@ -7,7 +7,6 @@ require('dotenv').config();
 /* GET home page. */
 router.get('/', async (req, res, next) => {
   operators=await models.operator.findAll({raw: true, attributes: ['name','id']})
-  console.log(operators)
   res.render('index', { title: 'BNDS', operators: operators, version: process.env.VERSION});
 });
 
@@ -126,7 +125,6 @@ router.post('/resultado', async (req, res) => {
       });
     }
   }
-  console.log(generations);
   res.render('result', {
     title: 'BNDS',
     operators: operators,
