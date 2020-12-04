@@ -2,16 +2,17 @@ var express = require('express');
 var router = express.Router();
 const { models } = require('../sequelize');
 const { Op } = require("sequelize");
+require('dotenv').config();
 
 /* GET home page. */
 router.get('/', async (req, res, next) => {
   operators=await models.operator.findAll({raw: true, attributes: ['name','id']})
   console.log(operators)
-  res.render('index', { title: 'BNDS', operators: operators });
+  res.render('index', { title: 'BNDS', operators: operators, version: process.env.VERSION});
 });
 
 router.get('/acerca-de', async (req, res, next) => {
-  res.render('acerca-de', { title: 'BNDS' });
+  res.render('acerca-de', { title: 'BNDS', version: process.env.VERSION});
 });
 
 router.post('/resultado', async (req, res) => {
@@ -125,21 +126,15 @@ router.post('/resultado', async (req, res) => {
       });
     }
   }
-  console.log(genList[1]);
-/*
-  res.json({title: 'BNDS',
-  operator: operator,
-  smartphone: smartphone,
-  generations: genList,
-  technologies: technologies})
-  */
+  console.log(generations);
   res.render('result', {
     title: 'BNDS',
     operators: operators,
     operator: operator,
     smartphone: smartphone,
     generations: genList,
-    technologies: technologies
+    technologies: technologies,
+    version: process.env.VERSION
   });
 
 })
