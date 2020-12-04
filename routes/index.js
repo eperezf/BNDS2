@@ -15,7 +15,8 @@ router.get('/acerca-de', async (req, res, next) => {
 });
 
 router.post('/resultado', async (req, res) => {
-  console.log(req.body);
+  //Obtenemos todas las operadoras
+  operators=await models.operator.findAll({raw: true, attributes: ['name','id']})
   //Obtenemos la operadora
   operator = await models.operator.findOne({
     where: {
@@ -124,7 +125,7 @@ router.post('/resultado', async (req, res) => {
       });
     }
   }
-  console.log(generations);
+  console.log(genList[1]);
 /*
   res.json({title: 'BNDS',
   operator: operator,
@@ -134,6 +135,7 @@ router.post('/resultado', async (req, res) => {
   */
   res.render('result', {
     title: 'BNDS',
+    operators: operators,
     operator: operator,
     smartphone: smartphone,
     generations: genList,
