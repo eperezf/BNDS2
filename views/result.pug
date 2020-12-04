@@ -43,9 +43,11 @@ block content
       h3.text-center #{operator.name}
       form
         .form-group
-          label(for='exampleInputEmail1') Verifica en otra operadora:
-          input#exampleInputEmail1.form-control(type='email', aria-describedby='emailHelp')
-        button.btn.btn-primary(type='submit') Submit
+          label Verifica en otra operadora:
+          select.form-control(name='operator')
+            each operator in operators
+              option(value=operator.id) #{operator.name}
+        button.btn.btn-primary(type='submit') Verifica
 
 
   h2 Frecuencias
