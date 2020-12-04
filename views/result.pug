@@ -41,7 +41,8 @@ block content
                 |  Info.
     .col-md-3
       h3.text-center #{operator.name}
-      form
+      form(action='/resultado' method='POST' enctype='application/x-www-form-urlencoded')
+        input(type='hidden' name='smartphone' value=smartphone.fullName)
         .form-group
           label Verifica en otra operadora:
           select.form-control(name='operator')
