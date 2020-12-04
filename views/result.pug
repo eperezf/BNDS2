@@ -1,0 +1,78 @@
+extends includes/layout
+
+block content
+  .container-fluid
+    .row.justify-content-md-center.mt-2.mb-2
+      .col.col-md-auto
+        h2.text-center ¿Es compatible el #{smartphone.fullName} en la operadora #{operator.name}?
+    .row.mt-3.justify-content-md-center
+      .col-md-2
+        .card
+          img.card-img-top(src='https://via.placeholder.com/200x300')
+          .card-body.text-center
+            p
+              h5.text-center #{smartphone.fullName}
+            p
+              if smartphone.reviewUrl
+                a.btn.btn-primary(href=smartphone.reviewUrl) Leer review
+      .col-md-3
+        #accordionGen.accordion
+          each generation in generations
+            .card
+              .card-header(id='heading'+generation.name)
+                h2.mb-0
+                  button.btn.btn-link.btn-block.text-left(type='button', data-toggle='collapse', data-target='#collapse'+generation.name, aria-expanded='true', aria-controls='collapse'+generation.name) Compatibilidad en #{generation.name}
+              .collapse(id='collapse'+generation.name aria-labelledby='heading'+generation.name, data-parent='#accordionGen')
+                .card-body
+                  table.table
+                    thead
+                      tr
+                        th(scope='col') Frecuencia
+                        th(scope='col') #{operator.name}
+                        th(scope='col') #{smartphone.model}
+                    tbody
+                      each frequency in generation.frequencies
+                        tr
+                          if frequency.operatorCompat == 0 || frequency.smartphoneCompat == 0
+                            - rowClass = 'table-danger'
+                          if typeof(frequency.operatorCompat) === 'undefined' || typeof(frequency.smartphoneCompat)=== 'undefined'
+                            - rowClass = 'table-secondary'
+                          if frequency.operatorCompat == 1 && frequency.smartphoneCompat == 1
+                            - rowClass = 'table-success'
+                          th(scope='row' class=rowClass) 
+                            | #{frequency.name}
+                            if frequency.roaming == 1
+                              br
+                              small
+                                | Roaming: 
+                                each roamingProvider in frequency.roamingProviders
+                                  b  #{roamingProvider.name}
+                          td(class=rowClass)
+                            if frequency.operatorCompat == 1
+                              i.fas.fa-check
+                            else if frequency.operatorCompat == 0
+                              i.fas.fa-times
+                            else if !frequency.operatorCompat
+                              i.fas.fa-question
+                          td(class=rowClass)
+                            if frequency.smartphoneCompat == 1
+                              i.fas.fa-check
+                            else if frequency.smartphoneCompat == 0
+                              i.fas.fa-times
+                        
+      .col-md-2
+        .card
+          img.card-img-top(src=operator.urlLogo)
+          .card-body.text-center
+            p
+              h5.text-center #{operator.name}
+            p
+              a.btn.btn-primary(href=operator.urlWeb) Ir a la página web
+            form(action='/resultado' method='POST' enctype='application/x-www-form-urlencoded')
+              input(type='hidden' name='smartphone' value=smartphone.fullName)
+              .form-group
+                label Verifica en otra operadora:
+                select.form-control(name='operator')
+                  each operator in operators
+                    option(value=operator.id) #{operator.name}
+              button.btn.btn-primary(type='submit') Verifica

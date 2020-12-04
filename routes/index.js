@@ -1,19 +1,27 @@
 var express = require('express');
 var router = express.Router();
 const { models } = require('../sequelize');
+const { Op } = require("sequelize");
+require('dotenv').config();
 
 /* GET home page. */
 router.get('/', async (req, res, next) => {
-  res.render('index', { title: 'BNDS' });
+  operators=await models.operator.findAll({raw: true, attributes: ['name','id']})
+  console.log(operators)
+  res.render('index', { title: 'BNDS', operators: operators, version: process.env.VERSION});
+});
+
+router.get('/acerca-de', async (req, res, next) => {
+  res.render('acerca-de', { title: 'BNDS', version: process.env.VERSION});
 });
 
 router.post('/resultado', async (req, res) => {
-  console.log(req.body);
-
+  //Obtenemos todas las operadoras
+  operators=await models.operator.findAll({raw: true, attributes: ['name','id']})
   //Obtenemos la operadora
   operator = await models.operator.findOne({
     where: {
-      name: req.body.operator
+      id: req.body.operator
     },
     attributes: ['id', 'name', 'urlWeb', 'urlLogo'],
   });
@@ -21,7 +29,7 @@ router.post('/resultado', async (req, res) => {
   //Obtenemos el smartphone
   smartphone = await models.smartphone.findOne({
     where: {
-      fullName: req.body.name
+      fullName: {[Op.substring]: req.body.smartphone}
     },
     raw:true
   });
@@ -118,14 +126,17 @@ router.post('/resultado', async (req, res) => {
       });
     }
   }
-
-  // TEMP: Mostramos los resultados en JSON. Deberían ir como parámetros al render
-  res.status(200).json({
+  console.log(generations);
+  res.render('result', {
+    title: 'BNDS',
+    operators: operators,
     operator: operator,
     smartphone: smartphone,
-    frequencies: genList,
-    technologies: technologies
+    generations: genList,
+    technologies: technologies,
+    version: process.env.VERSION
   });
+
 })
 
 module.exports = router;
