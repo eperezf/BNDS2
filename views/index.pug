@@ -1,18 +1,24 @@
 extends includes/layout
 
 block content
-  h1.offset-md-1= title
-  p.offset-md-1 Welcome to #{title}
-  form(action='/resultado' method='POST' enctype='application/x-www-form-urlencoded')
-    .row
-      .col-md-3.offset-md-1
+  .container
+    .row.mt-3
+      .col-md-12
+        h2.text-center Revisa si tu teléfono es compatible
+        p.text-center Busca el modelo de tu teléfono y la operadora que quieres usar
+    .row.justify-content-md-center
+      form(action='/resultado' method='POST' enctype='application/x-www-form-urlencoded')
+      .col-md-5.mb-3
         label Busca tu telefono
-        input.form-control(type='text', placeholder='telefono' name='smartphone')
+        input.form-control#smartphone(type='search', autocomplete='off', placeholder='Ejemplo: iPhone 11' name='smartphone')
+        .autocomplete(style='position:absolute;display:inline-block;z-index:9999;')
         small#emailHelp.form-text.text-muted (Marca, modelo y variantes)
-      .col-md-3.offset-md-1
+      .col-md-5.mb-3
         label Selecciona tu operadora
         select.form-control(name='operator')
           each operator in operators
             option(value=operator.id) #{operator.name}
-    .row 
-    button.btn.btn-primary.col-md-1.offset-md-4(type='submit') Verificar
+    .row.justify-content-md-center
+      .col-md-2.text-center.mb-3
+        button.btn.btn-primary(type='submit') Verificar
+  script(src='/javascripts/autocomplete.js')
