@@ -139,4 +139,10 @@ router.post('/resultado', async (req, res) => {
 
 })
 
+router.post('/agregar', async (req, res) => {
+  res.render('agregar', {
+    smartphone: req.body.smartphone
+  })
+})
+
 module.exports = router;
