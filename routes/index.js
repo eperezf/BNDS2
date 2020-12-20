@@ -201,63 +201,60 @@ router.post('/agregar', async (req,res) => {
     }
   })
 
-  var checkDupe = await models.smartphone.findOne({
-    where: {
-      fullName: req.body.brand + " " + req.body.model + " " + req.body.variant
-    }
-  });
-  if (checkDupe == null) {
-    var phone = await models.smartphone.create({
-      brand: req.body.brand,
-      model: req.body.model,
-      variant: req.body.variant,
-      fullName: req.body.brand + " " + req.body.model + " " + req.body.variant,
-      visible: 1
-    })
-  }
-  else {
-    console.log("DUPE!");
-  }
-  console.log("TECHNOLOGIES");
-  req.body.technology.forEach((item, i) => {
-    console.log(item);
-    if (item.status == 'true') {
-      var smartTech = models.smartphone_technology.create({
-        smartphoneId: phone.dataValues.id,
-        technologyId: item.id,
-        compatible: true
-      })
-    }
-    else if (item.status == 'false'){
-      var smartTech = models.smartphone_technology.create({
-        smartphoneId: phone.dataValues.id,
-        technologyId: item.id,
-        compatible: false
-      })
-    }
-  });
-  console.log("FREQUENCIES");
-  req.body.frequency.forEach((item, i) => {
-    console.log(item);
-    if (item.status == 'true') {
-      var smartTech = models.smartphone_frequency.create({
-        smartphoneId: phone.dataValues.id,
-        frequencyId: item.id,
-        compatible: true
-      })
-    }
-    else if (item.status == 'false'){
-      var smartTech = models.smartphone_frequency.create({
-        smartphoneId: phone.dataValues.id,
-        frequencyId: item.id,
-        compatible: false
-      })
-    }
-  });
-
-  /*
   if (captcha.data.success == true) {
-    //INSERT PROCESSING HERE!!
+    var checkDupe = await models.smartphone.findOne({
+      where: {
+        fullName: req.body.brand + " " + req.body.model + " " + req.body.variant
+      }
+    });
+    if (checkDupe == null) {
+      var phone = await models.smartphone.create({
+        brand: req.body.brand,
+        model: req.body.model,
+        variant: req.body.variant,
+        fullName: req.body.brand + " " + req.body.model + " " + req.body.variant,
+        visible: 0
+      })
+    }
+    else {
+      res.clearCookie('message');
+      res.cookie('message', {type:'success', message:'El teléfono que querías agregar ya existe.'});
+      res.redirect('/')
+      return;
+    }
+    req.body.technology.forEach((item, i) => {
+      console.log(item);
+      if (item.status == 'true') {
+        var smartTech = models.smartphone_technology.create({
+          smartphoneId: phone.dataValues.id,
+          technologyId: item.id,
+          compatible: true
+        })
+      }
+      else if (item.status == 'false'){
+        var smartTech = models.smartphone_technology.create({
+          smartphoneId: phone.dataValues.id,
+          technologyId: item.id,
+          compatible: false
+        })
+      }
+    });
+    req.body.frequency.forEach((item, i) => {
+      if (item.status == 'true') {
+        var smartTech = models.smartphone_frequency.create({
+          smartphoneId: phone.dataValues.id,
+          frequencyId: item.id,
+          compatible: true
+        })
+      }
+      else if (item.status == 'false'){
+        var smartTech = models.smartphone_frequency.create({
+          smartphoneId: phone.dataValues.id,
+          frequencyId: item.id,
+          compatible: false
+        })
+      }
+    });
     res.clearCookie('message');
     res.cookie('message', {type:'success', message:'Teléfono agregado con éxito.'});
     res.redirect('/')
@@ -267,10 +264,6 @@ router.post('/agregar', async (req,res) => {
     res.cookie('message', {type:'danger', message:'Ocurrió un error al agregar el teléfono.'});
     res.redirect('/agregar')
   }
-  */
-
-
-
 })
 
 module.exports = router;
