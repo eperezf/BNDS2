@@ -1,0 +1,119 @@
+extends includes/layout
+
+block content
+  .container-fluid
+    .row.justify-content-md-center.mt-2.mb-2
+      .col.col-md-auto
+        h2.text-center ¿Es compatible el #{smartphone.fullName} en la operadora #{operator.name}?
+    .row.mt-3.justify-content-md-center
+      .col-md-2.mt-3
+        .card
+          img.card-img-top(src='https://via.placeholder.com/200x300')
+          .card-body.text-center
+            p
+              h5.text-center #{smartphone.fullName}
+            p
+              if smartphone.reviewUrl
+                a.btn.btn-primary(href='https://pisapapeles.net/'+smartphone.reviewUrl) Leer review
+      .col-md-3.mt-3
+        #accordionGen.accordion
+          each generation in generations
+            .card
+              .card-header(id='heading'+generation.name)
+                h2.mb-0
+                  button.btn.btn-link.btn-block.text-left(type='button', data-toggle='collapse', data-target='#collapse'+generation.name, aria-expanded='true', aria-controls='collapse'+generation.name) Compatibilidad en #{generation.name}
+              .collapse(id='collapse'+generation.name aria-labelledby='heading'+generation.name, data-parent='#accordionGen')
+                .card-body
+                  if generation.frequencies[0]
+                    table.table
+                      thead
+                        tr
+                          th(scope='col') Frecuencia
+                          th(scope='col') #{operator.name}
+                          th(scope='col') #{smartphone.model}
+                      tbody
+                        each frequency in generation.frequencies
+                          if frequency.operatorCompat != 0
+                            tr
+                              if frequency.operatorCompat == 0 || frequency.smartphoneCompat == 0
+                                - rowClass = 'table-danger'
+                              if frequency.operatorCompat == 2 || frequency.smartphoneCompat == 2
+                                - rowClass = 'table-secondary'
+                              if frequency.operatorCompat == 1 && frequency.smartphoneCompat == 1
+                                - rowClass = 'table-success'
+                              th(scope='row' class=rowClass) 
+                                | #{frequency.name}
+                                if frequency.roaming == 1
+                                  br
+                                  small
+                                    | Roaming: 
+                                    each roamingProvider in frequency.roamingProviders
+                                      b  #{roamingProvider.name}
+                              td(class=rowClass)
+                                if frequency.operatorCompat == 1
+                                  i.fas.fa-check
+                                else if frequency.operatorCompat == 0
+                                  i.fas.fa-times
+                                else if frequency.operatorCompat == 2
+                                  i.fas.fa-question
+                              td(class=rowClass)
+                                if frequency.smartphoneCompat == 1
+                                  i.fas.fa-check
+                                else if frequency.smartphoneCompat == 0
+                                  i.fas.fa-times
+                                else if frequency.smartphoneCompat == 2
+                                  i.fas.fa-question
+                  else
+                    p Todavía no se han licitado las frecuencias 5G.
+                    a.btn.btn-primary(href='https://pisapapeles.net/subtel-da-a-conocer-las-empresas-que-postularon-a-la-licitacion-de-5g/') Más información
+        #accordionTech.accordion.mt-2
+          each technology in technologies
+            .card
+              .card-header(id='heading'+technology.id)
+                h2.mb-0
+                  button.btn.btn-link.btn-block.text-left(type='button', data-toggle='collapse', data-target='#collapse'+technology.id, aria-expanded='true', aria-controls='collapse'+technology.id) #{technology.name}
+              .collapse(id='collapse'+technology.id aria-labelledby='heading'+technology.id, data-parent='#accordionTech')
+                .card-body
+                  table.table.text-center
+                    thead
+                      tr
+                        th(scope='col') #{operator.name}
+                        th(scope='col') #{smartphone.model}
+                    tbody
+                      tr
+                        if technology.operatorCompat == 0 || technology.smartphoneCompat == 0
+                          - rowClass = 'table-danger'
+                        if technology.operatorCompat == 2 || technology.smartphoneCompat == 2
+                          - rowClass = 'table-secondary'
+                        if technology.operatorCompat == 1 && technology.smartphoneCompat == 1
+                          - rowClass = 'table-success'
+                        td(class=rowClass)
+                          if technology.operatorCompat == 1
+                            i.fas.fa-check
+                          else if technology.operatorCompat == 0
+                            i.fas.fa-times
+                          else if technology.operatorCompat == 2
+                            i.fas.fa-question
+                        td(class=rowClass)
+                          if technology.smartphoneCompat == 1
+                            i.fas.fa-check
+                          else if technology.smartphoneCompat == 0
+                            i.fas.fa-times
+                          else if technology.smartphoneCompat == 2
+                            i.fas.fa-question
+      .col-md-2.mt-3
+        .card
+          img.card-img-top(src=operator.urlLogo)
+          .card-body.text-center
+            p
+              h5.text-center #{operator.name}
+            p
+              a.btn.btn-primary(href=operator.urlWeb) Ir a la página web
+            form(action='/resultado' method='POST' enctype='application/x-www-form-urlencoded')
+              input(type='hidden' name='smartphone' value=smartphone.fullName)
+              .form-group
+                label Verifica en otra operadora:
+                select.form-control(name='operator')
+                  each operator in operators
+                    option(value=operator.id) #{operator.name}
+              button.btn.btn-primary(type='submit') Verifica
