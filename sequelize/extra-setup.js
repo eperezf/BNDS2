@@ -7,7 +7,8 @@ function applyExtraSetup(sequelize) {
     technology,
     operator_frequency,
     operator_technology,
-    smartphone_technology
+    smartphone_technology,
+		smartphone_frequency
   } = sequelize.models;
 
   //Relación frecuencia-operador
@@ -23,6 +24,9 @@ function applyExtraSetup(sequelize) {
       unique:false
     }
   });
+
+	smartphone.hasMany(smartphone_technology);
+	smartphone.hasMany(smartphone_frequency);
 
   generation.hasMany(frequency);
   frequency.belongsTo(generation);

@@ -34,21 +34,22 @@ block content
                     h5 #{generation.name}
                   .card-body
                     each frequency in generation.frequencies
+                      input(type='hidden' name='frequency['+frequency.id+'][id]' value=frequency.id)
                       .card.mb-3.bg-light
                         .card-header #{frequency.name}
                         .card-body
                           .form-check
-                            input.form-check-input(type='radio' name='frequency['+frequency.id+']' value='true' id='freqTrue['+frequency.id+']' required)
+                            input.form-check-input(type='radio' name='frequency['+frequency.id+'][status]' value='true' id='freqTrue['+frequency.id+']' required)
                             label.form-check-label(for='frequency['+frequency.id+']')
                               i.fas.fa-check.me-1
                               | Sí
                           .form-check
-                            input.form-check-input(type='radio' name='frequency['+frequency.id+']' value='false' id='freqFalse['+frequency.id+']' required)
+                            input.form-check-input(type='radio' name='frequency['+frequency.id+'][status]' value='false' id='freqFalse['+frequency.id+']' required)
                             label.form-check-label(for='frequency['+frequency.id+']')
                               i.fas.fa-times.me-2
                               | No
                           .form-check
-                            input.form-check-input(type='radio' name='frequency['+frequency.id+']' value='unknown' id='freqUnknown['+frequency.id+']' required)
+                            input.form-check-input(type='radio' name='frequency['+frequency.id+'][status]' value='unknown' id='freqUnknown['+frequency.id+']' required)
                             label.form-check-label(for='frequency['+frequency.id+']')
                               i.fas.fa-question.me-2
                               | No sé
@@ -61,23 +62,24 @@ block content
             | Tecnologías:
           .row
             each technology in technologies
+              input(type='hidden' name='technology['+technology.id+'][id]' value=technology.id)
               .col-md-3.col-sm-4.col-xs-12
                 .card.mb-3.bg-light
                   .card-header
                     h5 #{technology.name}
                   .card-body
                     .form-check
-                      input.form-check-input(type='radio' name='technology['+technology.id+']' value='true' id='techTrue['+technology.id+']' required)
+                      input.form-check-input(type='radio' name='technology['+technology.id+'][status]' value='true' id='techTrue['+technology.id+']' required)
                       label.form-check-label(for='technology['+technology.id+']')
                         i.fas.fa-check.me-1
                         | Sí
                     .form-check
-                      input.form-check-input(type='radio' name='technology['+technology.id+']' value='false' id='techFalse['+technology.id+']' required)
+                      input.form-check-input(type='radio' name='technology['+technology.id+'][status]' value='false' id='techFalse['+technology.id+']' required)
                       label.form-check-label(for='technology['+technology.id+']')
                         i.fas.fa-times.me-2
                         | No
                     .form-check
-                      input.form-check-input(type='radio' name='technology['+technology.id+']' value='unknown' id='techUnknown['+technology.id+']' required)
+                      input.form-check-input(type='radio' name='technology['+technology.id+'][status]' value='unknown' id='techUnknown['+technology.id+']' required)
                       label.form-check-label(for='technology['+technology.id+']')
                         i.fas.fa-question.me-2
                         | No sé

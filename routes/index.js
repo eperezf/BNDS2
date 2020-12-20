@@ -119,7 +119,7 @@ router.post('/resultado', async (req, res) => {
   });
 
   //Obtenemos compatibilidades de operadora y tecnología
-  smartphone_technologies = await models.smartphone_technology.findAll({where: {smartphoneId: operator.id}, raw:true});
+  smartphone_technologies = await models.smartphone_technology.findAll({where: {smartphoneId: smartphone.id}, raw:true});
   for (smartphone_technology of smartphone_technologies) {
     technologies.find(x => x.id === smartphone_technology.technologyId).smartphoneCompat = smartphone_technology.compatible
   }
@@ -184,9 +184,6 @@ router.get('/agregar', async (req, res) => {
   for (technology of technologies) {
     techList[techiter]
   }
-
-  console.log(genList);
-  console.log(technologies);
   res.render('agregar', {
     version: process.env.VERSION,
     generations: genList,
@@ -203,8 +200,64 @@ router.post('/agregar', async (req,res) => {
       response: req.body['g-recaptcha-response']
     }
   })
+
+  var checkDupe = await models.smartphone.findOne({
+    where: {
+      fullName: req.body.brand + " " + req.body.model + " " + req.body.variant
+    }
+  });
+  if (checkDupe == null) {
+    var phone = await models.smartphone.create({
+      brand: req.body.brand,
+      model: req.body.model,
+      variant: req.body.variant,
+      fullName: req.body.brand + " " + req.body.model + " " + req.body.variant,
+      visible: 1
+    })
+  }
+  else {
+    console.log("DUPE!");
+  }
+  console.log("TECHNOLOGIES");
+  req.body.technology.forEach((item, i) => {
+    console.log(item);
+    if (item.status == 'true') {
+      var smartTech = models.smartphone_technology.create({
+        smartphoneId: phone.dataValues.id,
+        technologyId: item.id,
+        compatible: true
+      })
+    }
+    else if (item.status == 'false'){
+      var smartTech = models.smartphone_technology.create({
+        smartphoneId: phone.dataValues.id,
+        technologyId: item.id,
+        compatible: false
+      })
+    }
+  });
+  console.log("FREQUENCIES");
+  req.body.frequency.forEach((item, i) => {
+    console.log(item);
+    if (item.status == 'true') {
+      var smartTech = models.smartphone_frequency.create({
+        smartphoneId: phone.dataValues.id,
+        frequencyId: item.id,
+        compatible: true
+      })
+    }
+    else if (item.status == 'false'){
+      var smartTech = models.smartphone_frequency.create({
+        smartphoneId: phone.dataValues.id,
+        frequencyId: item.id,
+        compatible: false
+      })
+    }
+  });
+
   /*
   if (captcha.data.success == true) {
+    //INSERT PROCESSING HERE!!
     res.clearCookie('message');
     res.cookie('message', {type:'success', message:'Teléfono agregado con éxito.'});
     res.redirect('/')
@@ -215,17 +268,8 @@ router.post('/agregar', async (req,res) => {
     res.redirect('/agregar')
   }
   */
-  console.log(req.body);
-  var phone = await models.smartphone.create({
-    brand: req.body.brand,
-    model: req.body.model,
-    variant: req.body.variant,
-    fullName: req.body.brand + " " + req.body.model + " " + req.body.variant,
-    visible: 0
-  })
 
-  console.log(phone instanceof models.smartphone);
-  console.log(phone.fullName);
+
 
 })
 
