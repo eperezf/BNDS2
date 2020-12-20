@@ -12,7 +12,7 @@ $(document).ready(()=>{
             }
             $('#suggestions').empty();
             if (!res.suggestions[0]) {
-              $('#suggestions').append('<li class="list-group-item">No encontramos el teléfono que buscabas.</br><button class="btn btn-primary mt-2" formaction="agregar" role="button">Agregar teléfono</a></li>')
+              $('#suggestions').append('<li class="list-group-item">No encontramos el teléfono que buscabas.</br><a href="/agregar" class="btn btn-primary mt-2" role="button">Agregar teléfono</a></li>')
             }
             res.suggestions.forEach((item, i) => {
               $('#suggestions').append('<li class="list-group-item list-group-item-action" style="cursor:pointer;" id='+i+'>'+item.fullName+'</li>')
