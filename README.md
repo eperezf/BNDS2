@@ -1,6 +1,7 @@
 # BNDS
 
-![](public/images/logo.png)
+<img src="public/images/logo.png" width="400" />
+
 
 ## Descripción
 
