@@ -21,5 +21,8 @@ module.exports = (sequelize) => {
     reviewUrl: {
 			type: DataTypes.STRING
 		},
+		visible: {
+			type: DataTypes.BOOLEAN
+		},
 	});
 };
