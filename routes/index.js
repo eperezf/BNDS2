@@ -7,7 +7,6 @@ require('dotenv').config();
 /* GET home page. */
 router.get('/', async (req, res, next) => {
   operators=await models.operator.findAll({raw: true, attributes: ['name','id']})
-  console.log(operators)
   res.render('index', { title: 'BNDS', operators: operators, version: process.env.VERSION});
 });
 
@@ -26,12 +25,23 @@ router.post('/resultado', async (req, res) => {
     attributes: ['id', 'name', 'urlWeb', 'urlLogo'],
   });
 
-  //Obtenemos el smartphone
-  smartphone = await models.smartphone.findOne({
-    where: {
-      fullName: {[Op.substring]: req.body.smartphone}
-    },
-    raw:true
+  //Obtenemos todas las tecnologías
+  technologies = await models.technology.findAll({attributes:['id', 'name'], raw:true});
+  techList = [];
+  var techiter = 0;
+  for (technology of technologies) {
+    techList[technology.id]
+  }
+
+  //Obtenemos compatibilidades de operadora y tecnología
+  operator_technologies = await models.operator_technology.findAll({where: {operatorId: operator.id}, raw:true});
+  for (operator_technology of operator_technologies) {
+    technologies.find(x => x.id === operator_technology.technologyId).operatorCompat = operator_technology.compatible
+  }
+  technologies.forEach((item, i) => {
+    if (item.operatorCompat === undefined) {
+      item.operatorCompat = 2
+    }
   });
 
   //Obtenemos todas las generaciones de frecuencias y sus respectivas frecuencias
@@ -53,26 +63,9 @@ router.post('/resultado', async (req, res) => {
     genIter++;
   }
 
-  //Obtenemos todas las tecnologías
-  technologies = await models.technology.findAll({attributes:['id', 'name'], raw:true});
-  techList = [];
-  var techiter = 0;
-  for (technology of technologies) {
-    techList[techiter]
-  }
-
-  //Obtenemos compatibilidades de operadora y tecnología
-  operator_technologies = await models.operator_technology.findAll({where: {operatorId: operator.id}, raw:true});
-  for (operator_technology of operator_technologies) {
-    technologies.forEach((item, i) => {
-      if (operator_technology.technologyId == item.id) {
-        technologies[i].operatorCompat = operator_technology.compatible
-      }
-    });
-  }
-
   //Obtenemos compatibilidad de operadora y frecuencias
   operator_frequencies = await models.operator_frequency.findAll({where: {operatorId: operator.id}, raw:true});
+
   function searchFrequencyCompat(frequencyId, op_freq){
     var frequencylist = [];
     for (var operator_frequency of op_freq) {
@@ -100,20 +93,35 @@ router.post('/resultado', async (req, res) => {
         else {
           frequency.roaming = 0
         }
-      }
 
+      }
+      if(frequency.operatorCompat === undefined){
+        frequency.operatorCompat = 2
+      }
+      if(frequency.roaming === undefined){
+        frequency.roaming = 0
+      }
     }
   }
 
-  //Obtenemos compatibilidades de smartphone y tecnología
-  smartphone_technologies = await models.smartphone_technology.findAll({where: {smartphoneId: smartphone.id}, raw:true});
+  //Obtenemos el smartphone
+  smartphone = await models.smartphone.findOne({
+    where: {
+      fullName: {[Op.substring]: req.body.smartphone}
+    },
+    raw:true
+  });
+
+  //Obtenemos compatibilidades de operadora y tecnología
+  smartphone_technologies = await models.smartphone_technology.findAll({where: {smartphoneId: operator.id}, raw:true});
   for (smartphone_technology of smartphone_technologies) {
-    technologies.forEach((item, i) => {
-      if (smartphone_technology.technologyId == item.id) {
-        technologies[i].smartphoneCompat = smartphone_technology.compatible
-      }
-    });
+    technologies.find(x => x.id === smartphone_technology.technologyId).smartphoneCompat = smartphone_technology.compatible
   }
+  technologies.forEach((item, i) => {
+    if (item.smartphoneCompat === undefined) {
+      item.smartphoneCompat = 2
+    }
+  });
 
   //Obtenemos comaptibilidad de smartphone y frecuencia
   smartphone_frequencies = await models.smartphone_frequency.findAll({where: {smartphoneId: smartphone.id}, attributes: ['frequencyId', 'compatible'], raw:true});
@@ -124,9 +132,11 @@ router.post('/resultado', async (req, res) => {
           frequency.smartphoneCompat = item.compatible;
         }
       });
+      if (frequency.smartphoneCompat === undefined) {
+        frequency.smartphoneCompat = 2
+      }
     }
   }
-  console.log(generations);
   res.render('result', {
     title: 'BNDS',
     operators: operators,
