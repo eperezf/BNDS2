@@ -14,7 +14,7 @@ block content
               h5.text-center #{smartphone.fullName}
             p
               if smartphone.reviewUrl
-                a.btn.btn-primary(href=smartphone.reviewUrl) Leer review
+                a.btn.btn-primary(href='https://pisapapeles.net/'+smartphone.reviewUrl) Leer review
       .col-md-3.mt-3
         h3 Frecuencias
         #accordionGen.accordion.accordion-flush
@@ -34,33 +34,36 @@ block content
                           th(scope='col') #{smartphone.model}
                       tbody
                         each frequency in generation.frequencies
-                          tr
-                            if frequency.operatorCompat == 0 || frequency.smartphoneCompat == 0
-                              - rowClass = 'table-danger'
-                            if typeof(frequency.operatorCompat) === 'undefined' || typeof(frequency.smartphoneCompat)=== 'undefined'
-                              - rowClass = 'table-secondary'
-                            if frequency.operatorCompat == 1 && frequency.smartphoneCompat == 1
-                              - rowClass = 'table-success'
-                            th(scope='row' class=rowClass) 
-                              | #{frequency.name}
-                              if frequency.roaming == 1
-                                br
-                                small
-                                  | Roaming: 
-                                  each roamingProvider in frequency.roamingProviders
-                                    b  #{roamingProvider.name}
-                            td(class=rowClass)
-                              if frequency.operatorCompat == 1
-                                i.fas.fa-check
-                              else if frequency.operatorCompat == 0
-                                i.fas.fa-times
-                              else if !frequency.operatorCompat
-                                i.fas.fa-question
-                            td(class=rowClass)
-                              if frequency.smartphoneCompat == 1
-                                i.fas.fa-check
-                              else if frequency.smartphoneCompat == 0
-                                i.fas.fa-times
+                          if frequency.operatorCompat != 0
+                            tr
+                              if frequency.operatorCompat == 0 || frequency.smartphoneCompat == 0
+                                - rowClass = 'table-danger'
+                              if frequency.operatorCompat == 2 || frequency.smartphoneCompat == 2
+                                - rowClass = 'table-secondary'
+                              if frequency.operatorCompat == 1 && frequency.smartphoneCompat == 1
+                                - rowClass = 'table-success'
+                              th(scope='row' class=rowClass) 
+                                | #{frequency.name}
+                                if frequency.roaming == 1
+                                  br
+                                  small
+                                    | Roaming: 
+                                    each roamingProvider in frequency.roamingProviders
+                                      b  #{roamingProvider.name}
+                              td(class=rowClass)
+                                if frequency.operatorCompat == 1
+                                  i.fas.fa-check
+                                else if frequency.operatorCompat == 0
+                                  i.fas.fa-times
+                                else if frequency.operatorCompat == 2
+                                  i.fas.fa-question
+                              td(class=rowClass)
+                                if frequency.smartphoneCompat == 1
+                                  i.fas.fa-check
+                                else if frequency.smartphoneCompat == 0
+                                  i.fas.fa-times
+                                else if frequency.smartphoneCompat == 2
+                                  i.fas.fa-question
                   else
                     p Todavía no se han licitado las frecuencias 5G.
                     a.btn.btn-primary(href='https://pisapapeles.net/subtel-da-a-conocer-las-empresas-que-postularon-a-la-licitacion-de-5g/') Más información
@@ -82,7 +85,7 @@ block content
                       tr
                         if technology.operatorCompat == 0 || technology.smartphoneCompat == 0
                           - rowClass = 'table-danger'
-                        if typeof(technology.operatorCompat) === 'undefined' || typeof(technology.smartphoneCompat)=== 'undefined'
+                        if technology.operatorCompat == 2 || technology.smartphoneCompat == 2
                           - rowClass = 'table-secondary'
                         if technology.operatorCompat == 1 && technology.smartphoneCompat == 1
                           - rowClass = 'table-success'
@@ -91,14 +94,14 @@ block content
                             i.fas.fa-check
                           else if technology.operatorCompat == 0
                             i.fas.fa-times
-                          else if !technology.operatorCompat
+                          else if technology.operatorCompat == 2
                             i.fas.fa-question
                         td(class=rowClass)
                           if technology.smartphoneCompat == 1
                             i.fas.fa-check
                           else if technology.smartphoneCompat == 0
                             i.fas.fa-times
-                          else if !technology.smartphoneCompat
+                          else if technology.smartphoneCompat == 2
                             i.fas.fa-question
       .col-md-2.mt-3
         .card
