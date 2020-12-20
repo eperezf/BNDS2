@@ -187,7 +187,7 @@ router.post('/agregar', async (req,res) => {
   console.log(req.body['g-recaptcha-response']);
   captcha = await axios.post('https://www.google.com/recaptcha/api/siteverify', undefined, {
     params: {
-      secret: '6Ld4Pw0aAAAAAKYE_fmZaiIZ1cUeNxfAf9ictZFE',
+      secret: process.env.RECAPTCHA_KEY,
       response: req.body['g-recaptcha-response']
     }
   })
