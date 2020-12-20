@@ -82,9 +82,9 @@ block content
                         i.fas.fa-question.me-2
                         | No sé
       .row.justify-content-md-center.mt-4.mb-4
-        .g-recaptcha(data-sitekey='6Ld4Pw0aAAAAAEK6nLBjh78XfU2c7lS0tEtJn1C1' data-callback='onCompleted' data-size='invisible')
+        .g-recaptcha(data-sitekey=sitekey data-callback='onCompleted' data-size='invisible')
         .col.text-center
           button.btn.btn-primary(type='submit') Agregar
           
-  script(src='https://www.google.com/recaptcha/api.js?render=6Ld4Pw0aAAAAAEK6nLBjh78XfU2c7lS0tEtJn1C1')
+  script(src='https://www.google.com/recaptcha/api.js?render='+sitekey)
   script(src='/javascripts/addphone.js')

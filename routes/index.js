@@ -11,6 +11,7 @@ router.get('/', async (req, res, next) => {
   var message
   if (req.cookies.message) {
     message = req.cookies.message
+    res.clearCookie('message');
   }
   res.render('index', { title: 'BNDS', operators: operators, version: process.env.VERSION, message:message});
 });
@@ -178,20 +179,20 @@ router.get('/agregar', async (req, res) => {
   res.render('agregar', {
     version: process.env.VERSION,
     generations: genList,
-    technologies: technologies
+    technologies: technologies,
+    sitekey: process.env.RECAPTCHA_SITE_KEY
   })
 })
 
 router.post('/agregar', async (req,res) => {
-  console.log(req.body);
-  console.log(req.body['g-recaptcha-response']);
+
   captcha = await axios.post('https://www.google.com/recaptcha/api/siteverify', undefined, {
     params: {
-      secret: process.env.RECAPTCHA_KEY,
+      secret: process.env.RECAPTCHA_SECRET_KEY,
       response: req.body['g-recaptcha-response']
     }
   })
-  console.log(captcha.data.success);
+  /*
   if (captcha.data.success == true) {
     res.clearCookie('message');
     res.cookie('message', {type:'success', message:'Teléfono agregado con éxito.'});
@@ -202,6 +203,18 @@ router.post('/agregar', async (req,res) => {
     res.cookie('message', {type:'danger', message:'Ocurrió un error al agregar el teléfono.'});
     res.redirect('/agregar')
   }
+  */
+  console.log(req.body);
+  var phone = await models.smartphone.create({
+    brand: req.body.brand,
+    model: req.body.model,
+    variant: req.body.variant,
+    fullName: req.body.brand + " " + req.body.model + " " + req.body.variant,
+    visible: 0
+  })
+
+  console.log(phone instanceof models.smartphone);
+  console.log(phone.fullName);
 
 })
 
