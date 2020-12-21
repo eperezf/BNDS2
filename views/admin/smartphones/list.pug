@@ -1,0 +1,40 @@
+extends ../../includes/layout
+
+block content
+  .container
+    .row
+      .col.text-center
+        a.btn.btn-outline-primary(href='/admin' role='button') Volver
+      .col.text-center
+        a.btn.btn-outline-success(href='/admin/smartphones/add' role='button') Agregar
+    .row.mt-3
+      .col
+        table.table
+          thead
+            tr
+              th(scope='col') ID
+              th(scope='col') Marca
+              th(scope='col') Modelo
+              th(scope='col') Variante
+              th(scope='col') Visibilidad
+              th(scope='col') Menu
+          tbody
+            each smartphone in smartphones
+              if smartphone.visible == 0
+                - tclass="table-dark"
+              else
+                - tclass=""
+              tr(class=tclass)
+                th(scope='row') #{smartphone.id}
+                td #{smartphone.brand}
+                td #{smartphone.model}
+                td #{smartphone.variant}
+                td
+                  if smartphone.visible == 0
+                    |Oculto
+                  else
+                    |Visible
+                td 
+                  a.btn.btn-outline-primary.mx-1(href='/admin/smartphones/edit/'+smartphone.id role='button') Editar
+                  a.btn.btn-outline-danger.mx-1(href='/admin/smartphones/delete/'+smartphone.id role='button') Eliminar
+                    

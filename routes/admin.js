@@ -38,8 +38,68 @@ router.post('/login', async(req,res, next)=>{
 });
 
 router.get('/',passport.authenticate('jwt', {session: false, failureRedirect: '/admin/login'}), async(req,res)=>{
-  console.log(req.user.user);
-  res.render("admin/index", {name:req.user.user.name})
+  const pending = await models.smartphone.count({where: {visible: 0}});
+  const active = await models.smartphone.count({where: {visible: 1}});
+  res.render("admin/index", {name:req.user.user.name, pending:pending, active:active})
+})
+
+// Operator Routes
+
+// List
+router.get('/operators', passport.authenticate('jwt', {session: false, failureRedirect: '/admin/login'}), async(req,res)=> {
+  operators=await models.operator.findAll({raw: true, attributes: ['name','id']})
+  res.render("admin/operators/list", {operators:operators});
+})
+
+// Technologies Routes
+
+// List
+router.get('/technologies', passport.authenticate('jwt', {session: false, failureRedirect: '/admin/login'}), async(req,res)=> {
+  technologies=await models.technology.findAll({raw: true})
+  res.render("admin/technologies/list", {technologies:technologies});
+})
+
+// Generations Routes
+
+// List
+router.get('/generations', passport.authenticate('jwt', {session: false, failureRedirect: '/admin/login'}), async(req,res)=> {
+  generations=await models.generation.findAll({raw: true})
+  res.render("admin/generations/list", {generations:generations});
+})
+
+// Frequencies Routes
+
+// List
+router.get('/frequencies', passport.authenticate('jwt', {session: false, failureRedirect: '/admin/login'}), async(req,res)=> {
+  //Obtenemos todas las generaciones de frecuencias y sus respectivas frecuencias
+  generations = await models.generation.findAll();
+  genList = []
+  var genIter = 0;
+  for (generation of generations) {
+    var freqIter = 0;
+    genList[genIter] = {};
+    genList[genIter].name = generation.name
+    genList[genIter].frequencies = [];
+    frequencies = await generation.getFrequencies();
+    for (var frequency of frequencies) {
+      genList[genIter].frequencies[freqIter] = {};
+      genList[genIter].frequencies[freqIter].name = frequency.name;
+      genList[genIter].frequencies[freqIter].id= frequency.id;
+      freqIter++
+    }
+    genIter++;
+  }
+
+  res.render("admin/frequencies/list", {genList:genList});
+})
+
+
+// Smartphone Routes
+
+// List
+router.get('/smartphones', passport.authenticate('jwt', {session: false, failureRedirect: '/admin/login'}), async(req,res)=> {
+  smartphones=await models.smartphone.findAll({raw: true})
+  res.render("admin/smartphones/list", {smartphones:smartphones});
 })
 
 

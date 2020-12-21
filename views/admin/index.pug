@@ -1,7 +1,36 @@
 extends ../includes/layout
 
 block content
-  .container
+  .container.mt-3
     .row
-      .col
-        p Sesión iniciada como #{name}
+      .col-md-4
+        .card
+          .card-header.text-center
+            |Sesión  iniciada
+          .card-body.text-center
+            p 
+              b #{name}
+            a.btn.btn-outline-primary(href="/admin/logout") Cerrar sesión
+      .col-md-4
+        .card
+          .card-header.text-center
+            |Teléfonos
+          .card-body
+            p Pendientes u ocultos: #{pending}
+            p Activos: #{active}
+            .d-grid.gap-2
+                
+      .col-md-4
+        .card
+          .card-header.text-center
+            |Menú Operativo
+          .card-body
+            .d-grid.gap-2
+              a.btn.btn-outline-primary.mx-1.my-1(href='admin/operators' role='button') Operadoras
+              a.btn.btn-outline-primary.mx-1.my-1(href='admin/technologies' role='button') Tecnologías
+              a.btn.btn-outline-primary.mx-1.my-1(href='admin/generations' role='button') Generaciones
+              a.btn.btn-outline-primary.mx-1.my-1(href='admin/frequencies' role='button') Frecuencias
+              a.btn.btn-outline-primary.mx-1.my-1(href='admin/smartphones' role='button') Teléfonos
+            
+            
+            

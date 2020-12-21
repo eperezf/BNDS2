@@ -34,9 +34,9 @@ function applyExtraSetup(sequelize) {
   technology.belongsToMany(operator, {through: 'operator_technology'});
   operator.belongsToMany(technology, {through: 'operator_technology'});
 
-  operator_technology.hasMany(technology);
+  //operator_technology.hasMany(technology);
 
-  smartphone_technology.hasMany(technology);
+  //smartphone_technology.hasMany(technology);
 
 }
 
