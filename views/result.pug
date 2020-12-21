@@ -31,7 +31,7 @@ block content
                         tr
                           th(scope='col') Frecuencia
                           th(scope='col') #{operator.name}
-                          th(scope='col') #{smartphone.model}
+                          th(scope='col') #{smartphone.fullName}
                       tbody
                         each frequency in generation.frequencies
                           if frequency.operatorCompat != 0
