@@ -4,14 +4,16 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+var passport = require('passport')
 var logger = require('morgan');
-
 const sequelize = require('./sequelize');
+require('./passport');
 
 
 // Definimos los archivos de las rutas
 var indexRouter = require('./routes/index');
 var apiRouter = require('./routes/api');
+var adminRouter = require('./routes/admin');
 
 var app = express();
 
@@ -25,13 +27,13 @@ app.use(bodyParser.urlencoded({ extended: true, limit:'50mb', parameterLimit: 10
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 //Use JSON parser
 app.use(bodyParser.json({limit:'50mb'}));
 
 app.use('/', indexRouter);
 app.use('/api', apiRouter);
-
-
+app.use('/admin', adminRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
