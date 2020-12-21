@@ -3,10 +3,12 @@ extends ../../includes/layout
 block content
   .container
     .row
-      .col.text-center
-        a.btn.btn-outline-primary(href='/admin' role='button') Volver
-      .col.text-center
-        a.btn.btn-outline-success(href='/admin/operators/add' role='button') Agregar
+      .col-md-12.text-center
+        h2 Listado de operadoras
+    .row.justify-content-md-center
+      .col-md-3.text-center
+          a.btn.btn-outline-primary.mx-1(href="/admin") Volver
+          a.btn.btn-outline-success.mx-1(href='/admin/operators/add' role='button') Agregar
     .row.mt-3
       .col
         table.table
@@ -21,5 +23,5 @@ block content
                 th(scope='row') #{operator.id}
                 td #{operator.name}
                 td 
-                  a.btn.btn-outline-primary.mx-1(href='/admin/operators/edit?id='+operator.id role='button') Editar
-                  a.btn.btn-outline-danger.mx-1(href='/admin/operators/delete?id='+operator.id role='button') Eliminar
+                  a.btn.btn-outline-primary.mx-1(href='/admin/operators/edit/'+operator.id role='button') Editar
+                  a.btn.btn-outline-danger.mx-1(href='/admin/operators/delete/'+operator.id role='button') Eliminar

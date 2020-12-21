@@ -3,10 +3,12 @@ extends ../../includes/layout
 block content
   .container
     .row
-      .col.text-center
-        a.btn.btn-outline-primary(href='/admin' role='button') Volver
-      .col.text-center
-        a.btn.btn-outline-success(href='/admin/smartphones/add' role='button') Agregar
+      .col-md-12.text-center
+        h2 Listado de smartphones
+    .row.justify-content-md-center
+      .col-md-3.text-center
+          a.btn.btn-outline-primary.mx-1(href="/admin") Volver
+          a.btn.btn-outline-success.mx-1(href='/admin/smartphones/add' role='button') Agregar
     .row.mt-3
       .col
         table.table
