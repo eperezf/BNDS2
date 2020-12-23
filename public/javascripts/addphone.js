@@ -6,19 +6,16 @@ $(document).ready(()=>{
         console.log('form submitted.');
 
         if (!grecaptcha.getResponse()) {
-            console.log('captcha not yet completed.');
 
             event.preventDefault(); //prevent form submit
             grecaptcha.execute();
         } else {
-            console.log('form really submitted.');
         }
     });
 
     onCompleted = function() {
         console.log('captcha completed.');
         $('#addPhoneForm').submit();
-        alert('wait to check for "captcha completed" in the console.');
     }
 
   brand = ""
