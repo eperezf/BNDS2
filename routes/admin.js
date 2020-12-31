@@ -6,7 +6,6 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const passport = require("passport");
 
-
 //
 // Login Routes
 //
@@ -62,6 +61,22 @@ router.get('/',passport.authenticate('jwt', {session: false, failureRedirect: '/
 //
 // Operator CRUD Routes
 //
+
+// Create (GET)
+router.get('/operators/add', passport.authenticate('jwt', {session: false, failureRedirect: '/admin/login'}), async(req,res)=>{
+  genList = await getFrequencies();
+  technologies = await models.technology.findAll({raw: true});
+  res.render('admin/operators/add', {generations:genList, technologies: technologies});
+})
+// Create (POST)
+router.post('/operators/add', passport.authenticate('jwt', {session: false, failureRedirect: '/admin/login'}), async(req,res)=>{
+  console.log(req.body);
+  const operator = models.operators.build({
+    name: req.body.name,
+    urlWeb: req.body.urlWeb,
+    urlLogo: req.body.urlLogo
+  })
+})
 
 // Read (GET)
 router.get('/operators', passport.authenticate('jwt', {session: false, failureRedirect: '/admin/login'}), async(req,res)=> {
@@ -130,18 +145,19 @@ router.get('/operators/edit/:id', passport.authenticate('jwt', {session: false, 
   res.render("admin/operators/edit", {operator:operator, generations: genList, technologies:technologies});
 })
 
+//
+// Technologies CRUD Routes
+//
 
-// Technologies Routes
-
-// List
+// Read (GET)
 router.get('/technologies', passport.authenticate('jwt', {session: false, failureRedirect: '/admin/login'}), async(req,res)=> {
   technologies=await models.technology.findAll({raw: true})
   res.render("admin/technologies/list", {technologies:technologies});
 })
 
-// Generations Routes
+// Generations CRUD Routes
 
-// List
+// Read (GET)
 router.get('/generations', passport.authenticate('jwt', {session: false, failureRedirect: '/admin/login'}), async(req,res)=> {
   generations=await models.generation.findAll({raw: true})
   res.render("admin/generations/list", {generations:generations});
