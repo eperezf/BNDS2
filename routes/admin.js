@@ -70,12 +70,33 @@ router.get('/operators/add', passport.authenticate('jwt', {session: false, failu
 })
 // Create (POST)
 router.post('/operators/add', passport.authenticate('jwt', {session: false, failureRedirect: '/admin/login'}), async(req,res)=>{
-  console.log(req.body);
-  const operator = models.operators.build({
+  const operator = await models.operator.build({
     name: req.body.name,
     urlWeb: req.body.urlWeb,
     urlLogo: req.body.urlLogo
   })
+  await operator.save();
+  operatorId = operator.dataValues.id;
+  req.body.frequency.forEach((item, i) => {
+    if (item.status != "unknown") {
+      console.log(item.id);
+      console.log(item.status);
+      models.operator_frequency.create({
+        operatorId: operatorId,
+
+      })
+    }
+  });
+  req.body.technology.forEach((item, i) => {
+    if (item.status != "unknown") {
+      models.operator_technology.create({
+        operatorId: operatorId,
+
+      })
+    }
+  });
+
+  return res.redirect("/admin/operators")
 })
 
 // Read (GET)
@@ -143,6 +164,16 @@ router.get('/operators/edit/:id', passport.authenticate('jwt', {session: false, 
 
   // Render
   res.render("admin/operators/edit", {operator:operator, generations: genList, technologies:technologies});
+})
+
+// Delete (POST)
+router.get('/operators/delete/:id', passport.authenticate('jwt', {session: false, failureRedirect: '/admin/login'}), async(req,res)=>{
+  await models.operator.destroy({
+    where: {
+      id: req.params.id
+    }
+  })
+  return res.redirect('/admin/operators');
 })
 
 //
