@@ -9,7 +9,7 @@ block content
           i.fas.fa-mobile.me-2
           | Teléfono: 
           #fullName.d-inline
-    form#addPhoneForm(method='POST' enctype='application/x-www-form-urlencoded' action='/admin/smartphones/add')
+    form#addPhoneForm(method='POST' enctype='multipart/form-data' action='/admin/smartphones/add')
       .row.justify-content-md-center.mt-4
         .col-md-4
           label.form-label(for='brand') Marca
@@ -20,6 +20,9 @@ block content
         .col-md-4
           label.form-label(for='variant') Variante
           input.form-control#variant(type='text' placeholder='SM-321' aria-label='Variante' name='variant' required)
+        .col-md-4.mt-2
+          label.form-label(for='imageUpload') Imágen
+          input.form-control#imageUpload(type='file' name='imageUpload')
       .row.justify-content-md-center.mt-4
         hr
         .col-md-12

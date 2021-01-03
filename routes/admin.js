@@ -5,6 +5,16 @@ const { Op } = require("sequelize");
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const passport = require("passport");
+var multer  = require('multer');
+var upload = multer();
+var Jimp = require('jimp');
+var slugify = require('slugify')
+var aws = require("aws-sdk");
+
+aws.config.update({
+  accessKeyId: process.env.AKID,
+  secretAccessKey: process.env.SECRET
+});
 
 //
 // Login Routes
@@ -255,7 +265,35 @@ router.get('/smartphones/add', passport.authenticate('jwt', {session: false, fai
   })
 })
 
-router.post('/smartphones/add', passport.authenticate('jwt', {session: false, failureRedirect: '/admin/login'}), async(req,res)=>{
+router.post('/smartphones/add', upload.single('imageUpload'), passport.authenticate('jwt', {session: false, failureRedirect: '/admin/login'}), async(req,res)=>{
+  console.log(req.file);
+  url = slugify(req.body.brand + " " + req.body.model + " " + req.body.variant)
+  try {
+    var file = await Jimp.read(Buffer.from(req.file.buffer, 'base64'))
+  } catch (e) {
+    console.log("IMAGE NOT OK:");
+    console.log(e);
+    return res.status(500).send("Image error")
+  }
+  var scaled = await file.scaleToFit(600,900);
+  var buffer = await scaled.getBufferAsync(Jimp.AUTO);
+  var s3 = new aws.S3({params: {Bucket: process.env.AWS_S3_BUCKET}, endpoint: process.env.AWS_S3_ENDPOINT});
+  var params = {
+    Bucket: process.env.AWS_S3_BUCKET,
+    Key: "smartphones/"+url+".png",
+    ACL: 'public-read',
+    Body: buffer
+  }
+  s3up = await s3.putObject(params, function (err, data) {
+    if (err) {
+      s3res = err;
+    } else {
+      s3res = "ok"
+    }
+  }).promise();
+
+  console.log(s3res);
+  /*
   var checkDupe = await models.smartphone.findOne({
     where: {
       fullName: req.body.brand + " " + req.body.model + " " + req.body.variant
@@ -309,9 +347,11 @@ router.post('/smartphones/add', passport.authenticate('jwt', {session: false, fa
       })
     }
   });
+
   res.clearCookie('message');
   res.cookie('message', {type:'success', message:'Teléfono agregado con éxito.'});
   res.redirect('/admin/smartphones')
+  */
 });
 
 

@@ -7,8 +7,8 @@ const bodyParser = require('body-parser');
 var passport = require('passport')
 var logger = require('morgan');
 const sequelize = require('./sequelize');
-require('./passport');
 
+require('./passport');
 
 // Definimos los archivos de las rutas
 var indexRouter = require('./routes/index');
