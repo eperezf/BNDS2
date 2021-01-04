@@ -1,4 +1,4 @@
-extends includes/layout
+extends ../../includes/layout
 
 block content
   
@@ -9,7 +9,7 @@ block content
           i.fas.fa-mobile.me-2
           | Teléfono: 
           #fullName.d-inline
-    form#addPhoneForm(method='POST' enctype='application/x-www-form-urlencoded' action='/agregar')
+    form#addPhoneForm(method='POST' enctype='multipart/form-data' action='/admin/smartphones/add')
       .row.justify-content-md-center.mt-4
         .col-md-4
           label.form-label(for='brand') Marca
@@ -20,6 +20,12 @@ block content
         .col-md-4
           label.form-label(for='variant') Variante
           input.form-control#variant(type='text' placeholder='SM-321' aria-label='Variante' name='variant' required)
+        .col-md-4
+          label.form-label(for='imageUpload') Imágen
+          input.form-control#imageUpload(type='file' name='imageUpload' accept="image/jpeg, image/png")
+        .col-md-4
+          label.form-label(for='reviewUrl') URL Review
+          input.form-control#reviewUrl(type='text' placeholder='https://pisapapeles.net/review-asdf' aria-label='URL Review' name='reviewUrl')
       .row.justify-content-md-center.mt-4
         hr
         .col-md-12
@@ -84,9 +90,6 @@ block content
                         i.fas.fa-question.me-2
                         | No sé
       .row.justify-content-md-center.mt-4.mb-4
-        .g-recaptcha(data-sitekey=sitekey data-callback='onCompleted' data-size='invisible')
         .col.text-center
           button.btn.btn-primary(type='submit') Agregar
-          
-  script(src='https://www.google.com/recaptcha/api.js?render='+sitekey)
-  script(src='/javascripts/addphone.js')
+  script(src="/javascripts/addphone-admin.js")

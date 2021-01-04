@@ -1,25 +1,24 @@
-extends includes/layout
+extends ../../includes/layout
 
 block content
-  
-  .container
-    .row.mt-4
-      .col
-        .h2
-          i.fas.fa-mobile.me-2
-          | Teléfono: 
-          #fullName.d-inline
-    form#addPhoneForm(method='POST' enctype='application/x-www-form-urlencoded' action='/agregar')
+  .container.mt-3
+    .row
+      .col-md-12.text-center
+        h2 Agregar operadora
+    .row.justify-content-md-center
+      .col-md-3.text-center
+          a.btn.btn-primary.mx-1(href="/admin/operators") Volver
+    form#addPhoneForm(method='POST' enctype='application/x-www-form-urlencoded' action='/admin/operators/add')
       .row.justify-content-md-center.mt-4
         .col-md-4
-          label.form-label(for='brand') Marca
-          input.form-control#brand(type='text' placeholder='Samsung' aria-label='Marca' name='brand' required)
+          label.form-label(for='name') Nombre
+          input.form-control#name(type='text' placeholder='Clavistel' aria-label='Nombre' name='name' required)
         .col-md-4
-          label.form-label(for='model') Modelo
-          input.form-control#model(type='text' placeholder='Galaxy S20 Plus' aria-label='Modelo' name='model' required)
+          label.form-label(for='urlWeb') URL Web
+          input.form-control#urlWeb(type='text' placeholder='http://clavistel.cl' aria-label='urlWeb' name='urlWeb' required)
         .col-md-4
-          label.form-label(for='variant') Variante
-          input.form-control#variant(type='text' placeholder='SM-321' aria-label='Variante' name='variant' required)
+          label.form-label(for='urlLogo') URL Logo
+          input.form-control#urlLogo(type='text' placeholder='http://static.pisapapeles.net/image.png' aria-label='urlLogo' name='urlLogo' require)
       .row.justify-content-md-center.mt-4
         hr
         .col-md-12
@@ -35,8 +34,8 @@ block content
                   .card-body
                     each frequency in generation.frequencies
                       input(type='hidden' name='frequency['+frequency.id+'][id]' value=frequency.id)
-                      .card.mb-3.bg-light(style="transition: all ease-in-out 0.1s")
-                        .card-header.bg-secondary.text-white(style="transition: all ease-in-out 0.1s") #{frequency.name}
+                      .card.mb-3.bg-light
+                        .card-header #{frequency.name}
                         .card-body
                           .form-check
                             input.form-check-input(type='radio' name='frequency['+frequency.id+'][status]' value='true' id='freqTrue['+frequency.id+']' required)
@@ -64,8 +63,8 @@ block content
             each technology in technologies
               input(type='hidden' name='technology['+technology.id+'][id]' value=technology.id)
               .col-md-3.col-sm-4.col-xs-12
-                .card.mb-3.bg-light(style="transition: all ease-in-out 0.1s")
-                  .card-header.bg-secondary.text-white(style="transition: all ease-in-out 0.1s")
+                .card.mb-3.bg-light
+                  .card-header
                     h5 #{technology.name}
                   .card-body
                     .form-check
@@ -84,9 +83,5 @@ block content
                         i.fas.fa-question.me-2
                         | No sé
       .row.justify-content-md-center.mt-4.mb-4
-        .g-recaptcha(data-sitekey=sitekey data-callback='onCompleted' data-size='invisible')
         .col.text-center
-          button.btn.btn-primary(type='submit') Agregar
-          
-  script(src='https://www.google.com/recaptcha/api.js?render='+sitekey)
-  script(src='/javascripts/addphone.js')
+          button.btn.btn-success(type='submit') Guardar

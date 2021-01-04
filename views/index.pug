@@ -19,7 +19,7 @@ block content
           small#emailHelp.form-text.text-muted (Marca, modelo y variantes)
         .col-md-5.mb-3
           label Selecciona tu operadora
-          select.form-control(name='operator')
+          select.form-select(name='operator')
             each operator in operators
               option(value=operator.id) #{operator.name}
       .row.justify-content-md-center
