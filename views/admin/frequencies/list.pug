@@ -1,0 +1,28 @@
+extends ../../includes/layout
+
+block content
+  .container
+    .row
+      .col.text-center
+        a.btn.btn-outline-primary(href='/admin' role='button') Volver
+      .col.text-center
+        a.btn.btn-outline-success(href='/admin/frequencies/add' role='button') Agregar
+    .row.mt-3
+      .col
+        table.table
+          thead
+            tr
+              th(scope='col') ID
+              th(scope='col') Generación
+              th(scope='col') Nombre
+              th(scope='col') Menu
+          tbody
+            each generation in genList
+              each frequency in generation.frequencies
+                tr
+                  th(scope='row') #{frequency.id}
+                  td #{generation.name}
+                  td #{frequency.name}
+                  td 
+                    a.btn.btn-outline-primary.mx-1(href='/admin/frequencies/edit/'+frequency.id role='button') Editar
+                    a.btn.btn-outline-danger.mx-1(href='/admin/frequencyies/delete/'+frequency.id role='button') Eliminar
