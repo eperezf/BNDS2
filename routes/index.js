@@ -13,11 +13,11 @@ router.get('/', async (req, res, next) => {
     message = req.cookies.message
     res.clearCookie('message');
   }
-  res.render('index', { title: 'BNDS', operators: operators, version: process.env.VERSION, message:message});
+  res.render('index', { title: 'BNDS', operators: operators, message:message, environment: process.env.NODE_ENV});
 });
 
 router.get('/acerca-de', async (req, res, next) => {
-  res.render('acerca-de', { title: 'BNDS', version: process.env.VERSION});
+  res.render('acerca-de', { title: 'BNDS'});
 });
 
 router.post('/resultado', async (req, res) => {
@@ -150,7 +150,7 @@ router.post('/resultado', async (req, res) => {
     smartphone: smartphone,
     generations: genList,
     technologies: technologies,
-    version: process.env.VERSION
+    environment: process.env.NODE_ENV
   });
 
 })
@@ -185,10 +185,10 @@ router.get('/agregar', async (req, res) => {
     techList[techiter]
   }
   res.render('agregar', {
-    version: process.env.VERSION,
     generations: genList,
     technologies: technologies,
     sitekey: process.env.RECAPTCHA_SITE_KEY
+    environment: process.env.NODE_ENV
   })
 })
 
