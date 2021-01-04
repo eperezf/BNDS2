@@ -8,7 +8,10 @@ block content
     .row.mt-3.justify-content-md-center
       .col-md-2.mt-3
         .card
-          img.card-img-top(src=smartphone.imageUrl)
+          if (!smartphone.imageUrl)
+            img.card-img-top(src="https://static.bnds.cl/smartphones/noimg.png")
+          else
+            img.card-img-top(src=smartphone.imageUrl)
           .card-body.text-center
             p
               h5.text-center #{smartphone.fullName}
