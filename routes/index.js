@@ -218,7 +218,7 @@ router.post('/agregar', async (req,res) => {
     }
     else {
       res.clearCookie('message');
-      res.cookie('message', {type:'success', message:'El teléfono que querías agregar ya existe.'});
+      res.cookie('message', {type:'success', message:'El teléfono que querías agregar ya existe o ya fue solicitado.'});
       res.redirect('/')
       return;
     }
@@ -256,7 +256,7 @@ router.post('/agregar', async (req,res) => {
       }
     });
     res.clearCookie('message');
-    res.cookie('message', {type:'success', message:'Teléfono agregado con éxito.'});
+    res.cookie('message', {type:'success', message:'Teléfono solicitado con éxito.'});
     res.redirect('/')
   }
   else {

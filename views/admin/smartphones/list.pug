@@ -43,5 +43,19 @@ block content
                     |Visible
                 td 
                   a.btn.btn-outline-primary.mx-1(href='/admin/smartphones/edit/'+smartphone.id role='button') Editar
-                  a.btn.btn-outline-danger.mx-1(href='/admin/smartphones/delete/'+smartphone.id role='button') Eliminar
+                  button.btn.btn-outline-danger.mx-1(type='button' data-bs-toggle='modal' data-bs-target='#deleteModal' onclick='setModal('+smartphone.id+',"'+smartphone.brand+'","'+smartphone.model+'","'+smartphone.variant+'")') Eliminar
                     
+  .modal.fade#deleteModal(data-bs-backdrop='static' data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteModalTitle" aria-hidden="true")
+    .modal-dialog
+      .modal-content
+        .modal-header
+          h5.modal-title#deleteModalTitle Confirmación de eliminación
+          button.btn-close(type='button' data-bs-dismiss="modal" aria-label="Close")
+        .modal-body
+          | ¿Estás seguro que quieres eliminar el teléfono 
+          #phoneName.d-inline
+          | ?
+        .modal-footer
+          button.btn.btn-secondary(type='button' data-bs-dismiss="modal") No
+          a.btn.btn-outline-danger.mx-1#deleteButton(href='/admin/smartphones/delete/' role='button') Eliminar
+  script(src="/javascripts/listphones.js")

@@ -265,29 +265,34 @@ router.post('/smartphones/add', upload.single('imageUpload'), passport.authentic
     }
   });
   if (checkDupe == null) {
-    try {
-      var file = await Jimp.read(Buffer.from(req.file.buffer, 'base64'))
-    } catch (e) {
-      console.log("IMAGE NOT OK:");
-      console.log(e);
-      return res.status(500).send("Image error")
-    }
-    var scaled = await file.scaleToFit(600,900);
-    var buffer = await scaled.getBufferAsync(Jimp.AUTO);
-    var s3 = new aws.S3({params: {Bucket: process.env.AWS_S3_BUCKET}, endpoint: process.env.AWS_S3_ENDPOINT});
-    var params = {
-      Bucket: process.env.AWS_S3_BUCKET,
-      Key: "smartphones/"+url+".png",
-      ACL: 'public-read',
-      Body: buffer
-    }
-    s3up = await s3.putObject(params, function (err, data) {
-      if (err) {
-        s3res = err;
-      } else {
-        s3res = "ok"
+    if (req.file) {
+      try {
+        var file = await Jimp.read(Buffer.from(req.file.buffer, 'base64'))
+      } catch (e) {
+        console.log("IMAGE NOT OK:");
+        console.log(e);
+        return res.status(500).send("Image error")
       }
-    }).promise();
+      var scaled = await file.scaleToFit(600,900);
+      var buffer = await scaled.getBufferAsync(Jimp.AUTO);
+      var s3 = new aws.S3({params: {Bucket: process.env.AWS_S3_BUCKET}, endpoint: process.env.AWS_S3_ENDPOINT});
+      var params = {
+        Bucket: process.env.AWS_S3_BUCKET,
+        Key: "smartphones/"+url+".png",
+        ACL: 'public-read',
+        Body: buffer
+      }
+      s3up = await s3.putObject(params, function (err, data) {
+        if (err) {
+          s3res = err;
+        } else {
+          s3res = "ok"
+        }
+      }).promise();
+    }
+    else {
+      url = 'noimg'
+    }
     var phone = await models.smartphone.create({
       brand: req.body.brand,
       model: req.body.model,
@@ -517,6 +522,31 @@ router.post('/smartphones/edit', upload.single('imageUpload'), passport.authenti
     }));
   }
   res.cookie('message', {type:'success', message:'Teléfono editado con éxito'});
+  res.redirect("/admin/smartphones")
+})
+
+// Delete (GET)
+router.get("/smartphones/delete/:id", passport.authenticate('jwt', {session: false, failureRedirect: '/admin/login'}), async(req,res)=>{
+  console.log("DELETING ID " + req.params.id);
+  console.log("DELETING ALL FREQUENCIES");
+  await models.smartphone_frequency.destroy({
+    where: {
+      smartphoneId: req.params.id
+    }
+  })
+  console.log("DELETING ALL TECHNOLOGIES");
+  await models.smartphone_technology.destroy({
+    where: {
+      smartphoneId: req.params.id
+    }
+  })
+  console.log("DELETING SELF");
+  await models.smartphone.destroy({
+    where: {
+      id: req.params.id
+    }
+  })
+  res.cookie('message', {type:'success', message:'Teléfono eliminado con éxito'});
   res.redirect("/admin/smartphones")
 })
 
