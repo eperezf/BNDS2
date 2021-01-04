@@ -187,7 +187,7 @@ router.get('/agregar', async (req, res) => {
   res.render('agregar', {
     generations: genList,
     technologies: technologies,
-    sitekey: process.env.RECAPTCHA_SITE_KEY
+    sitekey: process.env.RECAPTCHA_SITE_KEY,
     environment: process.env.NODE_ENV
   })
 })
