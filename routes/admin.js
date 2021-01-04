@@ -24,7 +24,6 @@ aws.config.update({
 router.get('/login', async (req, res)=>{
   var message
   if (req.cookies.message) {
-    console.log(message);
     message = req.cookies.message
     res.clearCookie('message');
   }
@@ -89,8 +88,6 @@ router.post('/operators/add', passport.authenticate('jwt', {session: false, fail
   operatorId = operator.dataValues.id;
   req.body.frequency.forEach((item, i) => {
     if (item.status != "unknown") {
-      console.log(item.id);
-      console.log(item.status);
       models.operator_frequency.create({
         operatorId: operatorId,
 
@@ -222,12 +219,6 @@ router.get('/frequencies', passport.authenticate('jwt', {session: false, failure
  */
 // Smartphone CRUD Routes
 
-// Read (GET)
-router.get('/smartphones', passport.authenticate('jwt', {session: false, failureRedirect: '/admin/login'}), async(req,res)=> {
-  smartphones=await models.smartphone.findAll({raw: true})
-  res.render("admin/smartphones/list", {smartphones:smartphones});
-})
-
 // Create (GET)
 router.get('/smartphones/add', passport.authenticate('jwt', {session: false, failureRedirect: '/admin/login'}), async(req,res)=> {
   //Obtenemos todas las generaciones de frecuencias y sus respectivas frecuencias
@@ -265,46 +256,45 @@ router.get('/smartphones/add', passport.authenticate('jwt', {session: false, fai
   })
 })
 
+// Create (POST)
 router.post('/smartphones/add', upload.single('imageUpload'), passport.authenticate('jwt', {session: false, failureRedirect: '/admin/login'}), async(req,res)=>{
-  console.log(req.file);
-  url = slugify(req.body.brand + " " + req.body.model + " " + req.body.variant)
-  try {
-    var file = await Jimp.read(Buffer.from(req.file.buffer, 'base64'))
-  } catch (e) {
-    console.log("IMAGE NOT OK:");
-    console.log(e);
-    return res.status(500).send("Image error")
-  }
-  var scaled = await file.scaleToFit(600,900);
-  var buffer = await scaled.getBufferAsync(Jimp.AUTO);
-  var s3 = new aws.S3({params: {Bucket: process.env.AWS_S3_BUCKET}, endpoint: process.env.AWS_S3_ENDPOINT});
-  var params = {
-    Bucket: process.env.AWS_S3_BUCKET,
-    Key: "smartphones/"+url+".png",
-    ACL: 'public-read',
-    Body: buffer
-  }
-  s3up = await s3.putObject(params, function (err, data) {
-    if (err) {
-      s3res = err;
-    } else {
-      s3res = "ok"
-    }
-  }).promise();
-
-  console.log(s3res);
-  /*
+  var url = slugify(req.body.brand + " " + req.body.model + " " + req.body.variant)
   var checkDupe = await models.smartphone.findOne({
     where: {
       fullName: req.body.brand + " " + req.body.model + " " + req.body.variant
     }
   });
   if (checkDupe == null) {
+    try {
+      var file = await Jimp.read(Buffer.from(req.file.buffer, 'base64'))
+    } catch (e) {
+      console.log("IMAGE NOT OK:");
+      console.log(e);
+      return res.status(500).send("Image error")
+    }
+    var scaled = await file.scaleToFit(600,900);
+    var buffer = await scaled.getBufferAsync(Jimp.AUTO);
+    var s3 = new aws.S3({params: {Bucket: process.env.AWS_S3_BUCKET}, endpoint: process.env.AWS_S3_ENDPOINT});
+    var params = {
+      Bucket: process.env.AWS_S3_BUCKET,
+      Key: "smartphones/"+url+".png",
+      ACL: 'public-read',
+      Body: buffer
+    }
+    s3up = await s3.putObject(params, function (err, data) {
+      if (err) {
+        s3res = err;
+      } else {
+        s3res = "ok"
+      }
+    }).promise();
     var phone = await models.smartphone.create({
       brand: req.body.brand,
       model: req.body.model,
       variant: req.body.variant,
       fullName: req.body.brand + " " + req.body.model + " " + req.body.variant,
+      imageUrl: 'https://static.bnds.cl/smartphones/'+url+'.png',
+      reviewUrl: req.body.reviewUrl,
       visible: 1
     })
   }
@@ -315,7 +305,6 @@ router.post('/smartphones/add', upload.single('imageUpload'), passport.authentic
     return;
   }
   req.body.technology.forEach((item, i) => {
-    console.log(item);
     if (item.status == 'true') {
       var smartTech = models.smartphone_technology.create({
         smartphoneId: phone.dataValues.id,
@@ -351,9 +340,185 @@ router.post('/smartphones/add', upload.single('imageUpload'), passport.authentic
   res.clearCookie('message');
   res.cookie('message', {type:'success', message:'Teléfono agregado con éxito.'});
   res.redirect('/admin/smartphones')
-  */
 });
 
+// Read (GET)
+router.get('/smartphones', passport.authenticate('jwt', {session: false, failureRedirect: '/admin/login'}), async(req,res)=> {
+  smartphones=await models.smartphone.findAll({
+    order: [
+      ['id', 'DESC']
+    ],
+    raw: true
+  })
+  var message
+  if (req.cookies.message) {
+    message = req.cookies.message
+    res.clearCookie('message');
+  }
+  res.render("admin/smartphones/list", {smartphones:smartphones, message:message});
+})
+
+// Update (GET)
+router.get('/smartphones/edit/:id', passport.authenticate('jwt', {session: false, failureRedirect: '/admin/login'}), async(req,res)=>{
+  genList = await getFrequencies();
+  smartphone=await models.smartphone.findOne({
+    where: {
+      id: req.params.id
+    }
+  })
+  technologies = await models.technology.findAll({attributes:['id', 'name'], raw:true});
+
+  //Obtenemos compatibilidades de operadora y tecnología
+  smartphone_technologies = await models.smartphone_technology.findAll({where: {smartphoneId: smartphone.id}, raw:true});
+  for (smartphone_technology of smartphone_technologies) {
+    technologies.find(x => x.id === smartphone_technology.technologyId).smartphoneCompat = smartphone_technology.compatible
+  }
+  technologies.forEach((item, i) => {
+    if (item.smartphoneCompat === undefined) {
+      item.smartphoneCompat = 2
+    }
+  });
+  //Obtenemos comaptibilidad de smartphone y frecuencia
+  smartphone_frequencies = await models.smartphone_frequency.findAll({where: {smartphoneId: smartphone.id}, attributes: ['frequencyId', 'compatible'], raw:true});
+  for (frequency_generation of genList){
+    for(frequency of frequency_generation.frequencies){
+      smartphone_frequencies.forEach((item, i) => {
+        if (item.frequencyId == frequency.id) {
+          frequency.smartphoneCompat = item.compatible;
+        }
+      });
+      if (frequency.smartphoneCompat === undefined) {
+        frequency.smartphoneCompat = 2
+      }
+    }
+  }
+  res.render("admin/smartphones/edit", {generations:genList, technologies:technologies, smartphone:smartphone.dataValues});
+})
+
+// Update (POST)
+
+router.post('/smartphones/edit', upload.single('imageUpload'), passport.authenticate('jwt', {session: false, failureRedirect: '/admin/login'}), async(req,res)=>{
+  // Check if item is duplicate but not itself (name not modified)
+  var imageUrl
+  if (req.body.visible == 'true') {
+    req.body.visible = 1
+  }
+  else {
+    req.body.visible = 0
+  }
+  var url = slugify(req.body.brand + " " + req.body.model + " " + req.body.variant)
+  var fullName = req.body.brand + " " + req.body.model + " " + req.body.variant;
+  var duplicate = await models.smartphone.count({
+    where: {
+      fullName: fullName,
+      [Op.not]: [
+        {id: req.body.id}
+      ]
+    }
+  });
+  if (duplicate > 0) {
+    res.redirect('back');
+  }
+  else {
+    if (req.file) {
+      try {
+        var file = await Jimp.read(Buffer.from(req.file.buffer, 'base64'))
+      } catch (e) {
+        console.log("IMAGE NOT OK:");
+        console.log(e);
+        return res.status(500).send("Image error")
+      }
+      var scaled = await file.scaleToFit(600,900);
+      var buffer = await scaled.getBufferAsync(Jimp.AUTO);
+      var s3 = new aws.S3({params: {Bucket: process.env.AWS_S3_BUCKET}, endpoint: process.env.AWS_S3_ENDPOINT});
+      var params = {
+        Bucket: process.env.AWS_S3_BUCKET,
+        Key: "smartphones/"+url+".png",
+        ACL: 'public-read',
+        Body: buffer
+      }
+      s3up = await s3.putObject(params, function (err, data) {
+        if (err) {
+          s3res = err;
+        } else {
+          s3res = "ok"
+        }
+      }).promise();
+      imageUrl = "https://static.bnds.cl/smartphones/" + url + ".png"
+    }
+    updated = await models.smartphone.update(
+      {
+        brand: req.body.brand,
+        model: req.body.model,
+        variant: req.body.variant,
+        reviewUrl: req.body.reviewUrl,
+        visible: req.body.visible,
+        imageUrl: imageUrl
+    },
+    {
+      where: {
+        id: req.body.id
+      }
+    })
+
+    //Go over each frequency, see if it exists, modify it, or delete it, or create it.
+    await Promise.all(req.body.frequency.map(async(item)=> {
+      if (item.status == 'true') {
+        item.status = 1
+      }
+      else if(item.status == 'false'){
+        item.status = 0
+      }
+      else if(item.status == 'unknown'){
+        item.status = 2
+      }
+      var [frequency, created] = await models.smartphone_frequency.findOrCreate({
+        where: {
+          smartphoneId: req.body.id,
+          frequencyId: item.id
+        },
+        defaults: {
+          smartphoneId: req.body.id,
+          frequencyId: item.id,
+          compatible: item.status
+        }
+      })
+      if (created == false) {
+        frequency.compatible = item.status
+        await frequency.save()
+      }
+    }));
+
+    await Promise.all(req.body.technology.map(async(item)=> {
+      if (item.status == 'true') {
+        item.status = 1
+      }
+      else if(item.status == 'false'){
+        item.status = 0
+      }
+      else if(item.status == 'unknown'){
+        item.status = 2
+      }
+      var [technology, created] = await models.smartphone_technology.findOrCreate({
+        where: {
+          smartphoneId: req.body.id,
+          technologyId: item.id
+        },
+        defaults: {
+          smartphoneId: req.body.id,
+          technologyId: item.id,
+          compatible: item.status
+        }
+      })
+      if (created == false) {
+        technology.compatible = item.status
+        await technology.save()
+      }
+    }));
+  }
+  res.cookie('message', {type:'success', message:'Teléfono editado con éxito'});
+  res.redirect("/admin/smartphones")
+})
 
 
 

@@ -3,6 +3,11 @@ extends ../../includes/layout
 block content
   .container
     .row
+      .col-md-12
+        if (message)
+          .alert.alert-dismissible.fade.show(role="alert" class="alert-"+message.type)
+            | #{message.message}
+            button.btn-close(type='button' data-bs-dismiss='alert' aria-label='Close')
       .col-md-12.text-center
         h2 Listado de smartphones
     .row.justify-content-md-center

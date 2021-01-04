@@ -8,13 +8,13 @@ block content
     .row.mt-3.justify-content-md-center
       .col-md-2.mt-3
         .card
-          img.card-img-top(src='https://via.placeholder.com/200x300')
+          img.card-img-top(src=smartphone.imageUrl)
           .card-body.text-center
             p
               h5.text-center #{smartphone.fullName}
             p
               if smartphone.reviewUrl
-                a.btn.btn-primary(href='https://pisapapeles.net/'+smartphone.reviewUrl) Leer review
+                a.btn.btn-primary(href=smartphone.reviewUrl) Leer review
       .col-md-3.mt-3
         h3 Frecuencias
         #accordionGen.accordion.accordion-flush
