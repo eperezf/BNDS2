@@ -1,5 +1,8 @@
 # BNDS
 
+<img src="public/images/logo.png" width="400" />
+
+
 ## Descripción
 
 BNDS es una plataforma de verificación de compatibilidad de smartphones y operadoras.
@@ -21,6 +24,12 @@ Como BNDS es un **desarrollo privado para Pisapapeles Networks**, la plataforma 
 - Instalar dependencias con `npm install`
 - Iniciar el servidor con `npm start`
 - El servidor debería estar disponible en [localhost en el puerto 3000](http://localhost:3000)
+
+Imagenes de los pasos:
+
+![](https://static.pisapapeles.net/uploads/2020/12/df2a1143-c3fd-48b8-8a27-6f3ec98aa6b1.jpeg)
+
+![](https://static.pisapapeles.net/uploads/2020/12/8c8cda09-d2a1-43fe-837d-31ada8dedf2d.jpeg)
 
 ## Archivos
 
