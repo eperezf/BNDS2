@@ -115,11 +115,14 @@ block content
               h5.text-center #{operator.name}
             p
               a.btn.btn-primary(href=operator.urlWeb) Ir a la página web
-            form(action='/resultado' method='POST' enctype='application/x-www-form-urlencoded')
+            form#repeatForm(action='/resultado' method='POST' enctype='application/x-www-form-urlencoded')
               input(type='hidden' name='smartphone' value=smartphone.fullName)
+              .g-recaptcha(data-sitekey=sitekey data-callback='onCompleted' data-size='invisible')
               .form-group
                 label Verifica en otra operadora:
                 select.form-control(name='operator')
                   each operator in operators
                     option(value=operator.id) #{operator.name}
-              button.btn.btn-primary(type='submit') Verifica
+              button.btn.btn-primary.mt-2(type='submit') Verifica
+  script(src='https://www.google.com/recaptcha/api.js?render='+sitekey)
+  script(src='/javascripts/result.js')

@@ -34,6 +34,7 @@ router.post('/resultado', async (req, res) => {
       response: req.body['g-recaptcha-response']
     }
   })
+  console.log(captcha.data.success);
   if (process.env.NODE_ENV == 'development') {
     captcha.data.success = true //Captcha always true for testing purposes
   }
@@ -167,7 +168,8 @@ router.post('/resultado', async (req, res) => {
       smartphone: smartphone,
       generations: genList,
       technologies: technologies,
-      environment: process.env.NODE_ENV
+      environment: process.env.NODE_ENV,
+      sitekey: process.env.RECAPTCHA_SITE_KEY
     });
   }
   else {
