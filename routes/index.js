@@ -34,6 +34,9 @@ router.post('/resultado', async (req, res) => {
       response: req.body['g-recaptcha-response']
     }
   })
+  if (process.env.NODE_ENV == 'development') {
+    captcha.data.success = true //Captcha always true for testing purposes
+  }
   if (captcha.data.success == true) {
     //Obtenemos todas las operadoras
     operators=await models.operator.findAll({raw: true, attributes: ['name','id']})
