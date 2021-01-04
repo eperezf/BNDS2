@@ -34,7 +34,6 @@ router.post('/resultado', async (req, res) => {
       response: req.body['g-recaptcha-response']
     }
   })
-  console.log(captcha.data.success);
   if (process.env.NODE_ENV == 'development') {
     captcha.data.success = true //Captcha always true for testing purposes
   }
