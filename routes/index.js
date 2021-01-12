@@ -27,6 +27,7 @@ router.get('/acerca-de', async (req, res, next) => {
 });
 
 router.post('/resultado', async (req, res) => {
+  console.log(req.body);
 
   captcha = await axios.post('https://www.google.com/recaptcha/api/siteverify', undefined, {
     params: {
@@ -38,8 +39,6 @@ router.post('/resultado', async (req, res) => {
     captcha.data.success = true //Captcha always true for testing purposes
   }
   if (captcha.data.success == true) {
-    //Obtenemos todas las operadoras
-    operators=await models.operator.findAll({raw: true, attributes: ['name','id']})
     //Obtenemos la operadora
     operator = await models.operator.findOne({
       where: {
@@ -47,6 +46,27 @@ router.post('/resultado', async (req, res) => {
       },
       attributes: ['id', 'name', 'urlWeb', 'urlLogo'],
     });
+
+    //Obtenemos el smartphone
+    smartphone = await models.smartphone.findOne({
+      where: {
+        fullName: {[Op.substring]: req.body.smartphone}
+      },
+      raw:true
+    });
+
+    //Check if operator and smartphone exist
+    if (!smartphone) {
+      res.cookie('message', {type:'danger', message:'El teléfono buscado no existe.'});
+      return res.redirect('/');
+    }
+    if (!operator) {
+      res.cookie('message', {type:'danger', message:'La operadora buscada no existe.'});
+      return res.redirect('/');
+    }
+
+    //Obtenemos todas las operadoras
+    operators=await models.operator.findAll({raw: true, attributes: ['name','id']})
 
     //Obtenemos todas las tecnologías
     technologies = await models.technology.findAll({attributes:['id', 'name'], raw:true});
@@ -126,14 +146,6 @@ router.post('/resultado', async (req, res) => {
         }
       }
     }
-
-    //Obtenemos el smartphone
-    smartphone = await models.smartphone.findOne({
-      where: {
-        fullName: {[Op.substring]: req.body.smartphone}
-      },
-      raw:true
-    });
 
     //Obtenemos compatibilidades de operadora y tecnología
     smartphone_technologies = await models.smartphone_technology.findAll({where: {smartphoneId: smartphone.id}, raw:true});
