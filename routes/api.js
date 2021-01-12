@@ -11,7 +11,8 @@ router.get('/autocomplete/:name', async (req, res, next) => {
   suggestions = await models.smartphone.findAll({
     raw: true,
     where: {
-      fullName: {[Op.substring]: req.params.name}
+      fullName: {[Op.substring]: req.params.name},
+      visible: 1
     },
     attributes: ['fullName'],
     limit: 5
