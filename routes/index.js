@@ -27,8 +27,7 @@ router.get('/acerca-de', async (req, res, next) => {
 });
 
 router.post('/resultado', async (req, res) => {
-  console.log(req.body);
-
+  //Get Recaptcha result
   captcha = await axios.post('https://www.google.com/recaptcha/api/siteverify', undefined, {
     params: {
       secret: process.env.RECAPTCHA_SECRET_KEY,
