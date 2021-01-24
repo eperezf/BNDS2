@@ -9,7 +9,7 @@ block content
       .col-md-2.mt-3
         .card
           if (!smartphone.imageUrl)
-            img.card-img-top.p-2(src="https://static.bnds.cl/smartphones/noimg.png")
+            img.card-img-top.p-2.w-50.align-self-center(src="https://static.bnds.cl/smartphones/noimg.png")
           else
             img.card-img-top(src=smartphone.imageUrl)
           .card-body.text-center
@@ -109,7 +109,7 @@ block content
                             i.fas.fa-question
       .col-md-2.mt-3
         .card
-          img.card-img-top.p-2(src=operator.urlLogo)
+          img.card-img-top.p-2.w-50.align-self-center(src=operator.urlLogo)
           .card-body.text-center
             p
               h5.text-center #{operator.name}
