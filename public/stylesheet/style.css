@@ -1,3 +1,6 @@
 .custombg{
     background-color:#73d2de;
 }
+html{
+  overflow-y: overlay;
+}

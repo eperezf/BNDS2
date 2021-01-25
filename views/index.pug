@@ -4,21 +4,28 @@ block content
   .container
     .row.mt-3
       .col-md-12
+        if (message)
+          .alert.alert-dismissible.fade.show(role="alert" class="alert-"+message.type)
+            | #{message.message}
+            button.btn-close(type='button' data-bs-dismiss='alert' aria-label='Close')
         h2.text-center Revisa si tu teléfono es compatible
         p.text-center Busca el modelo de tu teléfono y la operadora que quieres usar
-    form(action='/resultado' method='POST' enctype='application/x-www-form-urlencoded')
+    form#searchForm(method='POST' enctype='application/x-www-form-urlencoded' action='/resultado')
       .row.justify-content-md-center
         .col-md-5.mb-3
           label Busca tu telefono
-          input.form-control#smartphone(type='search', autocomplete='off', placeholder='Ejemplo: iPhone 11' name='smartphone')
+          input.form-control#smartphone(type='search', autocomplete='off', placeholder='Ejemplo: iPhone 11' name='smartphone' required)
           .autocomplete(style='position:absolute;display:inline-block;z-index:9999;')
           small#emailHelp.form-text.text-muted (Marca, modelo y variantes)
         .col-md-5.mb-3
           label Selecciona tu operadora
-          select.form-control(name='operator')
+          select.form-select(name='operator')
             each operator in operators
               option(value=operator.id) #{operator.name}
       .row.justify-content-md-center
         .col-md-2.text-center.mb-3
-          button.btn.btn-primary(type='submit') Verificar
+          .g-recaptcha(data-sitekey=sitekey data-callback='onCompleted' data-size='invisible')
+          button.btn.btn-primary(type='submit' formaction='/resultado') Verificar
+  script(src='https://www.google.com/recaptcha/api.js?render='+sitekey)
   script(src='/javascripts/autocomplete.js')
+  script(src='/javascripts/index.js')
