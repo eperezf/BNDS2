@@ -1,4 +1,6 @@
 head
+  meta(charset='utf-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no')
   if (environment == 'production')
     script(async src='https://www.googletagmanager.com/gtag/js?id=UA-50709703-2')
     script.
@@ -9,8 +11,6 @@ head
     script(data-ad-client="ca-pub-1690514382882874" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js")
   else 
     // DEV ENVIRONMENT. NO ANALYTICS. NO ADS.
-  meta(charset='utf-8')
-  meta(name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no')
   link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous")
   script(src='https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js', crossorigin='anonymous')
   link(rel='stylesheet', href='/stylesheet/style.css')

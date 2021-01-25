@@ -8,7 +8,10 @@ block content
     .row.mt-3.justify-content-md-center
       .col-md-2.mt-3
         .card
-          img.card-img-top(src=smartphone.imageUrl)
+          if (!smartphone.imageUrl)
+            img.card-img-top.p-2.w-50.align-self-center(src="https://static.bnds.cl/smartphones/noimg.png")
+          else
+            img.card-img-top.p-2.w-50.align-self-center(src=smartphone.imageUrl)
           .card-body.text-center
             p
               h5.text-center #{smartphone.fullName}
@@ -26,12 +29,12 @@ block content
               .accordion-collapse.collapse(id='collapse'+generation.name aria-labelledby='heading'+generation.name, data-bs-parent='#accordionGen')
                 .accordion-body
                   if generation.frequencies[0]
-                    table.table
+                    table.table.text-center
                       thead
                         tr
                           th(scope='col') Frecuencia
                           th(scope='col') #{operator.name}
-                          th(scope='col') #{smartphone.fullName}
+                          th(scope='col') #{smartphone.model}
                       tbody
                         each frequency in generation.frequencies
                           if frequency.operatorCompat != 0
@@ -67,6 +70,7 @@ block content
                   else
                     p Todavía no se han licitado las frecuencias 5G.
                     a.btn.btn-primary(href='https://pisapapeles.net/subtel-da-a-conocer-las-empresas-que-postularon-a-la-licitacion-de-5g/') Más información
+        hr
         h3.mt-3 Tecnologías
         #accordionTech.accordion.accordion-flush.mt-2
           each technology in technologies
@@ -105,17 +109,20 @@ block content
                             i.fas.fa-question
       .col-md-2.mt-3
         .card
-          img.card-img-top(src=operator.urlLogo)
+          img.card-img-top.p-2.w-50.align-self-center(src=operator.urlLogo)
           .card-body.text-center
             p
               h5.text-center #{operator.name}
             p
               a.btn.btn-primary(href=operator.urlWeb) Ir a la página web
-            form(action='/resultado' method='POST' enctype='application/x-www-form-urlencoded')
+            form#repeatForm(action='/resultado' method='POST' enctype='application/x-www-form-urlencoded')
               input(type='hidden' name='smartphone' value=smartphone.fullName)
+              .g-recaptcha(data-sitekey=sitekey data-callback='onCompleted' data-size='invisible')
               .form-group
                 label Verifica en otra operadora:
                 select.form-control(name='operator')
                   each operator in operators
                     option(value=operator.id) #{operator.name}
-              button.btn.btn-primary(type='submit') Verifica
+              button.btn.btn-primary.mt-2(type='submit') Verifica
+  script(src='https://www.google.com/recaptcha/api.js?render='+sitekey)
+  script(src='/javascripts/result.js')
