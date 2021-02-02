@@ -458,7 +458,8 @@ router.post('/smartphones/edit', upload.single('imageUpload'), passport.authenti
         variant: req.body.variant,
         reviewUrl: req.body.reviewUrl,
         visible: req.body.visible,
-        imageUrl: imageUrl
+        imageUrl: imageUrl,
+        fullName: req.body.brand + " " + req.body.model + " " + req.body.variant
     },
     {
       where: {
