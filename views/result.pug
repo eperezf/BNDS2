@@ -107,6 +107,10 @@ block content
                             i.fas.fa-times
                           else if technology.smartphoneCompat == 2
                             i.fas.fa-question
+                  if technology.name == "SAE" && technology.smartphoneCompat == 1
+                    .div
+                      p Las variantes vendidas oficialmente en Chile sí son compatibles con SAE. De todas formas, esa misma variante puede ser comercializada fuera de Chile y, al importarla, no tendrá compatibilidad con SAE. Favor verifica en la caja del teléfono que tenga el siguiente sticker para verificar compatibilidad:
+                      img.align-self-center.p-2.w-50(src="http://www.sae.gob.cl/src/images/SAE-LOGO.png")
       .col-md-2.mt-3
         .card
           img.card-img-top.p-2.w-50.align-self-center(src=operator.urlLogo)
