@@ -26,6 +26,12 @@ block content
         .col-md-2.text-center.mb-3
           .g-recaptcha(data-sitekey=sitekey data-callback='onCompleted' data-size='invisible')
           button.btn.btn-primary(type='submit' formaction='/resultado') Verificar
+        div.text-center.text-black-50
+          | ¿Encontraste algún error? 
+          a(href='https://twitter.com/bndscl')
+            | ¡Avísanos!
+            i.fab.fa-twitter.ms-2
+          
   script(src='https://www.google.com/recaptcha/api.js?render='+sitekey)
   script(src='/javascripts/autocomplete.js')
   script(src='/javascripts/index.js')

@@ -22,10 +22,39 @@ block content
         h3 Frecuencias
         #accordionGen.accordion.accordion-flush
           each generation in generations
+            - hasCompat = false
+            - hasIncompat = false
+            - hasUnknown = false
+            if generation.frequencies[0]
+              each frequency in generation.frequencies
+                if frequency.operatorCompat != 0
+                  if frequency.operatorCompat == 0 || frequency.smartphoneCompat == 0
+                    - hasIncompat = true
+                  if frequency.operatorCompat == 2 || frequency.smartphoneCompat == 2
+                    - hasUnknown = true
+                  if frequency.operatorCompat == 1 && frequency.smartphoneCompat == 1
+                    - hasCompat = true
+                if hasCompat == true
+                  - accordionClass = 'accordion-success'
+                  - accordionIcon = 'fas fa-check-circle'
+                else if hasIncompat == true
+                  - accordionClass = 'accordion-danger'
+                  - accordionIcon = 'fas fa-times-circle'
+                if hasCompat == true && hasIncompat == true
+                  - accordionClass = 'accordion-warning'
+                  - accordionIcon = 'fas fa-exclamation-circle'
+                if hasUnknown == true
+                  - accordionClass = 'accordion-secondary'
+                  - accordionIcon = 'fas fa-question-circle'
+            else
+              - accordionClass = 'accordion-secondary'
+              - accordionIcon = 'fas fa-question-circle'
             .accordion-item
               .accordion-header(id='heading'+generation.name)
                 h2.mb-0
-                  button.accordion-button.collapsed(type='button', data-bs-toggle='collapse', data-bs-target='#collapse'+generation.name, aria-expanded='true', aria-controls='collapse'+generation.name) Compatibilidad en #{generation.name}
+                  button.accordion-button.collapsed(class=accordionClass type='button', data-bs-toggle='collapse', data-bs-target='#collapse'+generation.name, aria-expanded='true', aria-controls='collapse'+generation.name) 
+                    i.me-2(class=accordionIcon)
+                    | Compatibilidad en #{generation.name}
               .accordion-collapse.collapse(id='collapse'+generation.name aria-labelledby='heading'+generation.name, data-bs-parent='#accordionGen')
                 .accordion-body
                   if generation.frequencies[0]
@@ -74,10 +103,24 @@ block content
         h3.mt-3 Tecnologías
         #accordionTech.accordion.accordion-flush.mt-2
           each technology in technologies
+            if technology.operatorCompat == 0 || technology.smartphoneCompat == 0
+              - rowClass = 'table-danger'
+              - accordionClass = 'accordion-danger'
+              - accordionIcon = 'fas fa-times-circle'
+            if technology.operatorCompat == 2 || technology.smartphoneCompat == 2
+              - rowClass = 'table-secondary'
+              - accordionClass = 'accordion-secondary'
+              - accordionIcon = 'fas fa-question-circle'
+            if technology.operatorCompat == 1 && technology.smartphoneCompat == 1
+              - rowClass = 'table-success'
+              - accordionClass = 'accordion-success'
+              - accordionIcon = 'fas fa-check-circle'
             .accordion-item
               .accordion-header(id='heading'+technology.id)
                 h2.mb-0
-                  button.accordion-button.collapsed(type='button', data-bs-toggle='collapse', data-bs-target='#collapse'+technology.id, aria-expanded='true', aria-controls='collapse'+technology.id) #{technology.name}
+                  button.accordion-button.collapsed(class=accordionClass type='button', data-bs-toggle='collapse', data-bs-target='#collapse'+technology.id, aria-expanded='true', aria-controls='collapse'+technology.id)
+                    i.me-2(class=accordionIcon)
+                    | #{technology.name}
               .accordion-collapse.collapse(id='collapse'+technology.id aria-labelledby='heading'+technology.id, data-bs-parent='#accordionTech')
                 .accordion-body
                   table.table.text-center
@@ -87,12 +130,6 @@ block content
                         th(scope='col') #{smartphone.model}
                     tbody
                       tr
-                        if technology.operatorCompat == 0 || technology.smartphoneCompat == 0
-                          - rowClass = 'table-danger'
-                        if technology.operatorCompat == 2 || technology.smartphoneCompat == 2
-                          - rowClass = 'table-secondary'
-                        if technology.operatorCompat == 1 && technology.smartphoneCompat == 1
-                          - rowClass = 'table-success'
                         td(class=rowClass)
                           if technology.operatorCompat == 1
                             i.fas.fa-check
@@ -107,6 +144,10 @@ block content
                             i.fas.fa-times
                           else if technology.smartphoneCompat == 2
                             i.fas.fa-question
+                  if technology.name == "SAE" && technology.smartphoneCompat == 1
+                    .div
+                      p Las variantes vendidas oficialmente en Chile sí son compatibles con SAE. De todas formas, esa misma variante puede ser comercializada fuera de Chile y, al importarla, no tendrá compatibilidad con SAE. Favor verifica en la caja del teléfono que tenga el siguiente sticker para verificar compatibilidad:
+                      img.align-self-center.p-2.w-50(src="http://www.sae.gob.cl/src/images/SAE-LOGO.png")
       .col-md-2.mt-3
         .card
           img.card-img-top.p-2.w-50.align-self-center(src=operator.urlLogo)
@@ -124,5 +165,10 @@ block content
                   each operator in operators
                     option(value=operator.id) #{operator.name}
               button.btn.btn-primary.mt-2(type='submit') Verifica
+      div.text-center.text-black-50.my-3
+        | ¿Encontraste algún error? 
+        a(href='https://twitter.com/bndscl')
+          | ¡Avísanos!
+          i.fab.fa-twitter.ms-2
   script(src='https://www.google.com/recaptcha/api.js?render='+sitekey)
   script(src='/javascripts/result.js')
